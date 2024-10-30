@@ -4,6 +4,10 @@ import { dict } from "../../lib/dict";
 import logo from "../../assets/icons/logo.png";
 import { useTheme } from "../../context/ThemeContext"; 
 import signup from "../../assets/images/signup.svg";
+import { useDispatch } from "react-redux";
+import { setUser } from '../../features/userSlice'; 
+import { useNavigate } from 'react-router-dom';
+import { apiSignupUser } from "../../lib/apiHelper";
 
 const SignupForm: React.FC = () => {
   const [email, setEmail] = useState("");
@@ -13,31 +17,69 @@ const SignupForm: React.FC = () => {
   const { currentTheme, setCurrentTheme } = useTheme();
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [result, setResult] = useState<{ status: string; message: string }>();
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
   const selectedLanguage = "english";
 
   useEffect(() => {
     setIsDarkMode(currentTheme === "dark");
   }, [currentTheme])
 
-  const handleSignup = (e: React.FormEvent) => {
+  const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
-    setResult({ status: "", message: "" });
     setIsLoading("db");
+  
+    try {
+      if (!email || !password || !confirmPassword) {
+        setResult({
+          status: 'fail',
+          message: dict[selectedLanguage].pleaseFillAllFields,
+        });
+        return;
+      }
 
-    if (!email || !password || !confirmPassword) {
-      setIsLoading("");
-      return;
-    }
+      if(password.length < 8){
+        setResult({
+          status: 'fail',
+          message: dict[selectedLanguage].passwordLength,
+        });
+        return;
+      }
+  
+      if (password !== confirmPassword) {
+        setResult({
+          status: 'fail',
+          message: dict[selectedLanguage].passwordsDontMatch,
+        });
+        return;
+      }
+  
+      const response = await apiSignupUser(email, password, "");
 
-    if (password !== confirmPassword) {
+      if (response.status === 'success') {
+        localStorage.setItem("token", response.token);
+        dispatch(setUser({ 
+          name: response.name || null, 
+          email: email, 
+          isLoggedIn: true 
+        }));
+        setResult(response);
+        navigate('/auth/verify'); 
+      } else {
+        setResult({
+          status: 'fail',
+          message: response.message === "User already exists"? dict[selectedLanguage].userAlreadyExists : dict[selectedLanguage].signupFailed,
+        });
+      }
+    } catch (err) {
+      console.error('Signup error:', err);
       setResult({
-        status: "password_confirmation_error",
-        message: dict[selectedLanguage].passwordsDontMatch,
+        status: 'fail',
+        message: err instanceof Error ? err.message : 'Signup failed',
       });
-      return;
+    } finally {
+      setIsLoading("");
     }
-
-    
   };
 
   const handleGoogleSignup = () => {
@@ -64,7 +106,7 @@ const SignupForm: React.FC = () => {
           </a>
 
           <div className="flex justify-between items-center mb-6">
-            <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
+            <h2 className="text-xl font-bold text-gray-900 dark:text-white">
               {dict[selectedLanguage].signup}
             </h2>
             <button
@@ -154,7 +196,11 @@ const SignupForm: React.FC = () => {
                 dict[selectedLanguage].signup
               )}
             </button>
-
+            {result && result.status === "fail" && (
+            <div className="mt-6 text-center text-base text-light-primary dark:text-dark-primary">
+              {result.message}
+            </div>
+          )}
             {/* Continue with Google */}
             <button
               type="button"
@@ -171,11 +217,6 @@ const SignupForm: React.FC = () => {
               )}
             </button>
           </form>
-          {result && result.status === "fail" && (
-            <div className="mt-3 text-center text-lg text-light-primary dark:text-dark-primary">
-              {dict[selectedLanguage].signupFailed}
-            </div>
-          )}
           {/* Login Link */}
           <p className="mt-6 text-center text-sm text-gray-500 dark:text-gray-400">
             {dict[selectedLanguage].alreadyHaveAccount}{" "}

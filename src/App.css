@@ -7,3 +7,12 @@
   background-size: cover;
   background-position: center;
 }
+
+.no-spinner[type="number"] {
+  -moz-appearance: textfield;
+} 
+
+.scrollbar-hide::-webkit-scrollbar,
+.modal-content::-webkit-scrollbar {
+  display: none;
+}

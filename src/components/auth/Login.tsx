@@ -4,6 +4,10 @@ import login from "../../assets/images/login.svg";
 import logo from "../../assets/icons/logo.png";
 import { dict } from "../../lib/dict";
 import { useTheme } from "../../context/ThemeContext";
+import { apiAuthenticateUser } from "../../lib/apiHelper";
+import { useDispatch } from "react-redux";
+import { setUser } from '../../features/userSlice'; 
+import { useNavigate } from "react-router-dom";
 
 const LoginForm: React.FC = ({}) => {
   const [email, setEmail] = useState<string>("");
@@ -12,21 +16,49 @@ const LoginForm: React.FC = ({}) => {
   const [result, setResult] = useState<{ status: string; message: string }>();
   const { currentTheme, setCurrentTheme } = useTheme();
   const [isDarkMode, setIsDarkMode] = useState(false);
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
   const selectedLanguage = "english";
-
+  
   useEffect(() => {
     setIsDarkMode(currentTheme === "dark");
   }, [currentTheme])
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setResult({ status: "", message: "" });
     setIsLoading("db");
+
     if (!email || !password) {
       setIsLoading("");
       return;
     }
-
+    try {
+      const response = await apiAuthenticateUser(email, password);
+      console.log("response", response);
+      if (response.status === 'success') {
+        dispatch(setUser({ 
+          name: response.name || null, 
+          email: email, 
+          isLoggedIn: true 
+        }));
+        setResult(response);
+        localStorage.setItem("token", response.token);
+        navigate('/auth/loading'); 
+      } else {
+        setResult({
+          status: 'fail',
+          message: dict[selectedLanguage].loginFailed,
+        });
+      }
+    } catch (err) {
+      setResult({
+        status: 'fail',
+        message: dict[selectedLanguage].loginFailed,
+      });
+    } finally {
+      setIsLoading("");
+    }
   };
 
   const handleGoogleLogin = () => {
@@ -53,7 +85,7 @@ const LoginForm: React.FC = ({}) => {
           </a>
 
           <div className="flex justify-between items-center mb-6">
-            <h2 className="text-3xl font-bold text-gray-900 dark:text-white">
+            <h2 className="text-xl font-bold text-gray-900 dark:text-white">
               {dict[selectedLanguage].login}
             </h2>
             <button
@@ -110,7 +142,14 @@ const LoginForm: React.FC = ({}) => {
               className="w-full p-3 flex justify-center items-center bg-light-primary dark:bg-dark-primary text-white rounded-md hover:bg-light-secondary dark:hover:bg-dark-secondary transition-colors duration-300"
             >
               {isLoading === "db" ? <FaSpinner className="animate-spin" /> : dict[selectedLanguage].login}
+
             </button>
+
+            {result && result.status === "fail" && (
+              <div className="mt-4 text-center text-base text-light-primary dark:text-dark-primary">
+                {result.message}
+              </div>
+            )}
 
             {/* Continue with Google */}
             <button
@@ -128,11 +167,7 @@ const LoginForm: React.FC = ({}) => {
               )}
             </button>
           </form>
-          {result && result.status === "fail" && (
-            <div className="mt-3 text-center text-lg text-light-primary dark:text-dark-primary">
-              {dict[selectedLanguage].loginFailed}
-            </div>
-          )}
+        
           {/* Signup Link */}
           <p className="mt-6 text-center text-sm text-gray-500 dark:text-gray-400">
             {dict[selectedLanguage].noAccount}{" "}

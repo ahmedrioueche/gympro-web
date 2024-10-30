@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, ChangeEvent, FormEvent, useEffect, useRef } from 'react';
-import { sendContactForm } from '../../lib/apiHelper';
+import { apiSendContactForm } from '../../lib/apiHelper';
 import { motion, useInView } from 'framer-motion';
 import { useTheme } from '../../context/ThemeContext';
 import contactImg from '../../assets/images/contact.svg'
@@ -60,7 +60,7 @@ const ContactForm: React.FC = () => {
         e.preventDefault();
         setButtonText("Sending..");
         try {
-            const result = await sendContactForm(formDetails);
+            const result = await apiSendContactForm(formDetails);
             setButtonText("Send");
             if (result.status === "success") {
                 setStatus({ success: true, message: 'Message sent successfully' });

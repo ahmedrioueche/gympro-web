@@ -1,38 +1,40 @@
-// store.ts
-import { configureStore, createSlice, PayloadAction } from '@reduxjs/toolkit';
+// src/lib/store.ts
+import { combineReducers, configureStore } from '@reduxjs/toolkit';
+import { persistStore, persistReducer, FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER } from 'redux-persist';
+import storage from 'redux-persist/lib/storage';
+import userReducer from '../features/userSlice';
 
-// Define the initial state type
-interface UserState {
-  name: string;
-}
+// Define root reducer
+const rootReducer = combineReducers({
+  user: userReducer,
+});
 
-// Initial state
-const initialState: UserState = {
-  name: '',
+// Persist configuration
+const persistConfig = {
+  key: 'root',
+  version: 1,
+  storage,
+  whitelist: ['user'], // only persist user reducer
 };
 
-// Create a slice of the store
-const userSlice = createSlice({
-  name: 'user',
-  initialState,
-  reducers: {
-    setName: (state, action: PayloadAction<string>) => {
-      state.name = action.payload;
-    },
-  },
-});
+// Create persisted reducer
+const persistedReducer = persistReducer(persistConfig, rootReducer);
 
-// Export actions
-export const { setName } = userSlice.actions;
-
-// Create the store
+// Configure store
 const store = configureStore({
-  reducer: {
-    user: userSlice.reducer,
-  },
+  reducer: persistedReducer,
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      serializableCheck: {
+        ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
+      },
+    }),
 });
 
-// Define the RootState and AppDispatch types
+// Create persistor
+export const persistor = persistStore(store);
+
+// Export types
 export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;
 

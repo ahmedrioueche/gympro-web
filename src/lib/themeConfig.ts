@@ -2,8 +2,8 @@
 export const themes = {
     light: {
       primary: '#3B82F6', // Soft blue for primary color
-      secondary: '#8A4FFF', // Lighter blue for secondary elements
-      background: '#E3F2FD', // Very light blue background for soft contrast
+      secondary: '#8A4FFF', // purple or som
+      background: '#FAF9F6', // Off white
       foreground: '#1E3A8A', // Dark blue for text
       surface: '#FFFFFF', // Pure white for cards and surfaces
       muted: '#B0BEC5', // Muted blue-gray for secondary text
@@ -14,10 +14,10 @@ export const themes = {
     },
     dark: {
       primary: '#1D4ED8', // Strong blue for primary color
-      secondary: '#8A4FFF', // Slightly lighter blue for secondary elements
-      background: '#1E293B', // Dark navy for background
+      secondary: '#8A4FFF', // purple or som
+      background: '#0B0C10', // Dark navy for background
       foreground: '#E5E7EB', // Light gray for text on dark mode
-      surface: '#334155', // Darker surface for cards
+      surface: '#101820', // Darker surface for cards
       muted: '#9CA3AF', // Muted gray for secondary text
       text: {
         primary: '#F1F5F9', // Very light gray for primary text

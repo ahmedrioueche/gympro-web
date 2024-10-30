@@ -1,22 +1,44 @@
+// src/index.tsx
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import { Provider } from 'react-redux';
+import { PersistGate } from 'redux-persist/integration/react';
+import store, { persistor } from './lib/store';
 import { ThemeProvider } from './context/ThemeContext';
+import { ApolloProvider } from '@apollo/client';
+import client from './apollo/apolloClient';
+import { BrowserRouter } from 'react-router-dom';
+import { AuthProvider } from './context/AuthContext';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
+
+const LoadingComponent = () => (
+  <div className="flex items-center justify-center min-h-screen">
+    Loading...
+  </div>
+);
+
 root.render(
   <React.StrictMode>
-      <ThemeProvider>
-        <App />
-      </ThemeProvider>  
+    <Provider store={store}>
+      <AuthProvider>
+        <PersistGate loading={<LoadingComponent />} persistor={persistor}>
+          <BrowserRouter>
+            <ApolloProvider client={client}>
+              <ThemeProvider>
+                <App />
+              </ThemeProvider>
+            </ApolloProvider>
+          </BrowserRouter>
+        </PersistGate>
+      </AuthProvider>
+    </Provider>
   </React.StrictMode>
 );
 
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
 reportWebVitals();
