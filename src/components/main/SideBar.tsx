@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
-import { FaCog, FaHome, FaKey, FaTachometerAlt, FaUser, FaUserPlus, FaVideo } from 'react-icons/fa';
+import { FaCog, FaHome, FaKey, FaTachometerAlt, FaUser, FaUserPlus, FaUserShield, FaVideo } from 'react-icons/fa';
 import { FaPeopleGroup } from 'react-icons/fa6';
 import { useLocation, useNavigate } from 'react-router-dom';
 
@@ -30,7 +30,7 @@ const Sidemenu = () => {
     >
       <button
         onClick={toggleSidebar}
-        className={`absolute top-2 ${isExpanded ? 'right-2' : 'right-6'} dark:text-dark-text-secondary text-light-text-primary  hover:text-dark-primary`}
+        className={`absolute top-2 ${isExpanded ? 'right-2' : 'right-6'} dark:text-dark-text-secondary text-light-text-primary  hover:text-dark-primary dark:hover:text-dark-primary`}
       >
         {isExpanded ? <ChevronLeft size={24} /> : <ChevronRight size={24} />}
       </button>
@@ -40,6 +40,11 @@ const Sidemenu = () => {
             className={`flex items-center space-x-2 p-2 cursor-pointer hover:bg-light-primary dark:hover:bg-dark-primary hover:text-dark-text-primary ${currentPage === "home" ? 'bg-gray-100 dark:bg-gray-700' : ''}`}>
           <FaHome className={`w-6 h-6 mr-2`} />
           {isExpanded && <span className="font-f2">Home</span>}
+        </li>
+        <li onClick={() => handleLinkClick("authentication")} 
+            className={`flex items-center space-x-2 p-2 cursor-pointer hover:bg-light-primary dark:hover:bg-dark-primary hover:text-dark-text-primary ${currentPage === "authentication" ? 'bg-gray-100 dark:bg-gray-700' : ''}`}>
+          <FaUserShield className={`w-6 h-6 mr-2`} />
+          {isExpanded && <span className="font-f2">Authentication</span>}
         </li>
         <li onClick={() => handleLinkClick("add-member")} 
             className={`flex items-center space-x-2 p-2 cursor-pointer hover:bg-light-primary dark:hover:bg-dark-primary hover:text-dark-text-primary ${currentPage === "add-member" ? 'bg-gray-100 dark:bg-gray-700' : ''}`}>
@@ -56,11 +61,7 @@ const Sidemenu = () => {
           <FaTachometerAlt className="w-6 h-6 mr-2" />
           {isExpanded && <span className="font-f2">Dashboard</span>}
         </li>
-        <li onClick={() => handleLinkClick("settings")} 
-            className={`flex items-center space-x-2 p-2 cursor-pointer hover:bg-light-primary dark:hover:bg-dark-primary hover:text-dark-text-primary ${currentPage === "settings" ? 'bg-gray-100 dark:bg-gray-700' : ''}`}>
-          <FaCog className="w-6 h-6 mr-2" />
-          {isExpanded && <span className="font-f2">Settings</span>}
-        </li>
+      
       </ul>
     </div>
   );

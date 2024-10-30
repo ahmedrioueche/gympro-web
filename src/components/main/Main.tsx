@@ -2,11 +2,12 @@ import React, { Suspense } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import AppNavbar from './AppNavbar';
 import SideMenu from './SideBar';
-import SkeletonHome from './SkeletonHome';
+import SkeletonHome from '../ui/SkeletonHome';
 import AppFooter from './AppFooter';
 
 // Lazy load components
 const Home = React.lazy(() => import('./Home'));
+const Authentication = React.lazy(() => import('./Authentication'));
 const AddUser = React.lazy(() => import('./AddUser'));
 const Members = React.lazy(() => import('./members/Members'));
 const MemberProfile = React.lazy(() => import('./members/MemberProfile'));
@@ -29,6 +30,7 @@ const Main = () => {
           <Suspense fallback={<SkeletonHome />}>
             <Routes>
               <Route path="home" element={<Home />} />
+              <Route path="authentication" element={<Authentication />} />
               <Route path="add-member" element={<AddUser />} />
               <Route path="members" element={<Members />} />
               <Route path="profile/:memberId" element={<MemberProfile />} />

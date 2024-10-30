@@ -2,7 +2,7 @@
 export const themes = {
     light: {
       primary: '#3B82F6', // Soft blue for primary color
-      secondary: '#8A4FFF', // purple or som
+      secondary: '#1D4ED8',   
       background: '#FAF9F6', // Off white
       foreground: '#1E3A8A', // Dark blue for text
       surface: '#FFFFFF', // Pure white for cards and surfaces
@@ -14,7 +14,7 @@ export const themes = {
     },
     dark: {
       primary: '#1D4ED8', // Strong blue for primary color
-      secondary: '#8A4FFF', // purple or som
+      secondary: '#2563EB',     // Slightly lighter blue to create contrast in dark theme
       background: '#0B0C10', // Dark navy for background
       foreground: '#E5E7EB', // Light gray for text on dark mode
       surface: '#101820', // Darker surface for cards

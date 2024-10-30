@@ -4,7 +4,7 @@ import {
   XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer,
   Cell
 } from 'recharts';
-import { Card, CardHeader, CardTitle, CardContent } from '../Cards';
+import { Card, CardHeader, CardTitle, CardContent } from '../../ui/Cards';
 import { Users, TrendingUp, DollarSign, Activity } from 'lucide-react';
 import gym_3 from "../../../assets/images/gym_3.svg"
 
@@ -50,7 +50,7 @@ const GymDashboard = () => {
   ];
 
   return (
-    <div className="flex flex-col h-screen p-6 bg-light-background dark:bg-dark-background scrollbar-hide overflow-y-auto">
+    <div className="flex flex-col h-screen p-2 py-4 md:p-6 bg-light-background dark:bg-dark-background scrollbar-hide overflow-y-auto">
         
       {/* Stats Cards */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">

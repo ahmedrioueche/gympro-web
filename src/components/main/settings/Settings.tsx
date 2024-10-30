@@ -1,7 +1,7 @@
 import React, { useState, ReactNode } from 'react';
 import { Moon, User, Lock, Bell } from 'lucide-react';
 import { FaBook, FaTimes, FaSpinner, FaCog, FaThemeco, FaPaintBrush } from 'react-icons/fa';
-import CustomDropdown from '../../SelectDropDown';
+import CustomDropdown from '../../ui/SelectDropDown';
 import { dict } from '../../../lib/dict';
 import { IconType } from 'react-icons/lib';
 import gym_3 from '../../../assets/images/gym_3.svg';

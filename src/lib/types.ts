@@ -2,8 +2,9 @@ export interface User {
   id?: string;
   email: string | null;
   name: string | null;
-  isLoggedIn: boolean;
+  isLoggedIn?: boolean;
   isEmailValidated?: boolean;
+  logo?: string;
 }
 
 export interface Member {

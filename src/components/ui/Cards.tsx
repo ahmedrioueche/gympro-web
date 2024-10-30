@@ -22,7 +22,7 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
     return (
       <div 
         ref={ref}
-        className={`pt-4 rounded-lg border bg-card text-card-foreground shadow-sm hover:shadow-lg transition duration-300 ${className}`} 
+        className={`pt-4 rounded-lg border bg-card text-card-foreground shadow-sm hover:shadow-lg dark:hover:shadow-xl transition duration-300 ${className}`} 
         {...props}
       >
         {children}
@@ -66,7 +66,7 @@ const CardContent = React.forwardRef<HTMLDivElement, CardContentProps>(
     return (
       <div
         ref={ref}
-        className={`p-6 pt-0 ${className}`}
+        className={`p-4 pt-0 ${className}`}
         {...props}
       />
     );

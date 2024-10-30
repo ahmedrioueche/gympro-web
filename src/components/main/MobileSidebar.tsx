@@ -1,6 +1,6 @@
 import { dict } from '../../lib/dict';
 import React, { useEffect, useRef, useState } from 'react';
-import { FaTachometerAlt, FaCog, FaBell, FaKey, FaVideo, FaHome, FaUserPlus, FaArrowAltCircleLeft, FaArrowLeft } from 'react-icons/fa';
+import { FaTachometerAlt, FaCog, FaBell, FaKey, FaVideo, FaHome, FaUserPlus, FaArrowAltCircleLeft, FaArrowLeft, FaUserShield } from 'react-icons/fa';
 import { FaPeopleGroup } from 'react-icons/fa6';
 import logo from "../../assets/icons/logo.png";
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -67,6 +67,11 @@ const MobileSidebar: React.FC<{ isOpen: boolean; onClose: () => void }> = ({ isO
               <FaHome className={`w-6 h-6 mr-2`} />
             <span className="font-f2">Home</span>
           </li>
+          <li onClick={() => handleLinkClick("authentication")} 
+            className={`flex items-center space-x-2 p-2 cursor-pointer hover:bg-light-primary dark:hover:bg-dark-primary hover:text-dark-text-primary ${currentPage === "authentication" ? 'bg-gray-100 dark:bg-gray-700' : ''}`}>
+           <FaUserShield className={`w-6 h-6 mr-2`} />
+           <span className="font-f2">Authentication</span>
+          </li>
           <li onClick={() => handleLinkClick("add-member")} 
               className={`flex items-center space-x-2 p-2 cursor-pointer hover:bg-light-primary dark:hover:bg-dark-primary hover:text-dark-text-primary ${currentPage === "add-member" ? 'bg-gray-100 dark:bg-gray-700' : ''}`}>
               <FaUserPlus className="w-6 h-6 mr-2" />
@@ -82,15 +87,8 @@ const MobileSidebar: React.FC<{ isOpen: boolean; onClose: () => void }> = ({ isO
               <FaTachometerAlt className="w-6 h-6 mr-2" />
             <span className="font-f2">Dashboard</span>
           </li>
-          <li onClick={() => handleLinkClick("settings")} 
-              className={`flex items-center space-x-2 p-2 cursor-pointer hover:bg-light-primary dark:hover:bg-dark-primary hover:text-dark-text-primary ${currentPage === "settings" ? 'bg-gray-100 dark:bg-gray-700' : ''}`}>
-              <FaCog className="w-6 h-6 mr-2" />
-            <span className="font-f2">Settings</span>
-          </li>
+        
         </ul>
-
-
-
       </div>
     </div>
 ); };

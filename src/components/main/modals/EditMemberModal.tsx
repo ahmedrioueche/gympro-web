@@ -1,4 +1,4 @@
-import CustomDropdown from '../../../components/SelectDropDown';
+import CustomDropdown from '../../ui/SelectDropDown';
 import { Member } from '../../../lib/types';
 import React, { useState } from 'react';
 import { FaTimes, FaEdit } from 'react-icons/fa';

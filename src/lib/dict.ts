@@ -69,6 +69,9 @@ export const dict : any = {
         language: "Language & Region",
         languageSettings: "Language Settings",
         userProfile: "User Profile",
+        profile: "Profile",
+        subscription: "Subsctiption",
+        feedback: "Feedback",
         privacySettings: "Privacy Settings",
         securitySettings: "Security Settings",
         accountSettings: "Account Settings",
@@ -110,6 +113,7 @@ export const dict : any = {
         staffCountLabel: "Number of Staff",
         areYouGymOwner: "Are you a gym owner?",
         submit: "Submit",
-
+        upgradePlan: "Upgrade Plan",
+        chatBot: "ChatBot"
     },
 }

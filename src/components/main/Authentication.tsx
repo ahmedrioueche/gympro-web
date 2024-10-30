@@ -1,12 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
-import logo from '../../assets/icons/logo.png';
-import CustomDropdown from '../ui/SelectDropDown';
-import { dict } from '../../lib/dict';
-import CustomFileInput from '../ui/CustomFileInput'; 
-import ImageModal from './modals/ImageModal'; 
 import { Member } from '../../lib/types';
 import { MemberApi } from '../../lib/apiHelper';
-import gym_6 from "../../assets/images/gym_6.svg"
+import gym_4 from "../../assets/images/gym_4.svg"
 
 interface Option {
   value: string;
@@ -22,7 +17,7 @@ interface Errors {
   subscriptionError: boolean;
 }
 
-const FacialRecognition: React.FC = () => {
+const Home: React.FC = () => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const streamRef = useRef<MediaStream | null>(null);
@@ -244,40 +239,43 @@ const handleAddMember = async () => {
   }
 
   return (
-    <div className="flex flex-col lg:flex-row h-screen overflow-hidden w-full p-2 bg-light-background dark:bg-dark-background transition-colors duration-300">
+    <div className="flex flex-col h-screen overflow-hidden w-full p-2 bg-light-background dark:bg-dark-background transition-colors duration-300">
       {/* Video Section */}
-      <div className="flex justify-center items-center lg:w-10/12 lg:mr-2 mb-2 h-full bg-light-background dark:bg-dark-background rounded-b-xl lg:rounded-r-xl shadow-inner relative max-h-[60%] lg:max-h-none overflow-hidden group">
-        {cameraError ? (
-          <div className="flex items-center justify-center w-full h-full bg-gray-900 rounded-xl">
-            <p className="text-white text-center p-4">{cameraError}</p>
-          </div>
-        ) : !isCameraOn ? (
-          <div className="relative w-full h-full rounded-xl">
-            <div 
-              className="absolute inset-0 md:bg-center -mt-8 md:mt-0 bg-cover bg-no-repeat opacity-60"
-              style={{ backgroundImage: `url(${gym_6})` }}
-            />
-            <video
-              ref={videoRef}
-              className="w-full h-full object-cover bg-black rounded-xl"
-              autoPlay
-              playsInline
-              muted
-            />
-          </div>
-        ) : (
+      <div className="flex justify-center items-center w-full h-3/4 bg-light-background dark:bg-dark-background rounded-xl shadow-inner relative overflow-hidden group">
+      {cameraError ? (
+        <div className="flex items-center justify-center w-full h-full bg-gray-900 rounded-xl">
+          <p className="text-white text-center p-4">{cameraError}</p>
+        </div>
+      ) : !isCameraOn ? (
+        <div className="relative w-full h-full rounded-xl">
+          <div
+            className="absolute inset-0 bg-cover md:bg-center -mt-8 md:mt-0 bg-no-repeat opacity-60"
+            style={{ 
+              backgroundImage: `url(${gym_4})`, 
+              height: '130%'
+            }}
+          />
           <video
             ref={videoRef}
-            className="w-full h-full object-cover bg-black rounded-xl opacity-90"
+            className="w-full h-full object-top object-contain bg-black rounded-xl" // Changed to object-top
             autoPlay
             playsInline
             muted
           />
-        )}
+        </div>
+      ) : (
+        <video
+          ref={videoRef}
+          className="w-full h-full object-top object-contain bg-black rounded-xl opacity-90" // Changed to object-top
+          autoPlay
+          playsInline
+          muted
+        />
+      )}
         <canvas ref={canvasRef} className="hidden" />
         <div className="absolute inset-0 rounded-xl border-none pointer-events-none" />
-        
-        {/* Updated Camera Controls Layout */}
+  
+        {/* Camera Controls */}
         {!cameraError && (
           <div className="absolute bottom-0 left-0 w-full p-14 md:p-0 h-[20%] bg-black bg-opacity-0 group-hover:bg-opacity-40 transition-all duration-300 flex flex-col justify-center items-center">
             <div className="flex items-center space-x-4">
@@ -289,10 +287,12 @@ const handleAddMember = async () => {
                   Capture Image
                 </button>
               )}
-              <button 
+              <button
                 onClick={toggleCamera}
                 className={`px-4 py-2 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-300 ${
-                  isCameraOn ? 'bg-red-500 hover:bg-red-600' : 'bg-light-primary dark:bg-dark-primary hover:bg-light-secondary dark:hover:bg-dark-secondary transition duration-300'
+                  isCameraOn
+                    ? 'bg-red-500 hover:bg-red-600'
+                    : 'bg-light-primary dark:bg-dark-primary hover:bg-light-secondary dark:hover:bg-dark-secondary transition duration-300'
                 } text-white`}
               >
                 {isCameraOn ? 'Turn Off Camera' : 'Turn On Camera'}
@@ -306,110 +306,26 @@ const handleAddMember = async () => {
           </div>
         )}
       </div>
-
-      {/* Input Section */}
-      <div className={`flex flex-col lg:w-4/12 p-4 scrollbar-hide bg-light-surface dark:bg-dark-surface rounded-t-xl lg:rounded-l-xl shadow-lg space-y-4 lg:space-y-6 max-h-full overflow-auto`}>
-        <div className="flex items-center justify-center space-x-2">
-          <img src={logo} alt="GymPro Logo" className="h-8 w-8" />
-          <span className="text-xl font-f2 text-light-text-primary dark:text-dark-text-primary">
-            {dict[selectedLanguage].logo}
-          </span>
-        </div>
-
-        <div className="flex flex-col justify-center space-y-4 ">
-          <input
-            type="text"
-            placeholder="Enter name"
-            value={personName}
-            onChange={(e) => setPersonName(e.target.value)}
-            className="w-full p-2 px-3 rounded-lg bg-gray-100 dark:text-dark-text-primary text-light-text-primary dark:bg-gray-700 outline-none focus:ring-1 focus:ring-light-primary dark:focus:ring-dark-primary border border-gray-300 dark:border-gray-600"
-          />
-          {errors.nameError && <span className="text-red-500 text-sm">Name is required</span>}
-
-          <input
-            type="text"
-            placeholder="Enter age"
-            value={age}
-            onChange={(e) => setAge(e.target.value)}
-            className="w-full p-2 px-3 rounded-lg dark:text-dark-text-primary text-light-text-primary bg-gray-100 dark:bg-gray-700 outline-none focus:ring-1 focus:ring-light-primary dark:focus:ring-dark-primary border border-gray-300 dark:border-gray-600"
-          />
-          {errors.ageError && <span className="text-red-500 text-sm">Enter a valid age</span>}
-
-          <CustomDropdown
-            options={genderOptions}
-            value={gender}
-            onChange={setGender}
-            placeholder="Gender"
-            className={`border border-gray-300 dark:border-gray-600 rounded-md  ${errors.genderError ? 'border-red-500' : 'border-gray-300'}`}
-            bgColor='bg-gray-100 dark:bg-gray-700'
-          />
-          {errors.genderError && <span className="text-red-500 text-sm">Gender is required</span>}
-
-          <input
-            type="email"
-            placeholder="Enter email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            className="w-full p-2 px-3 dark:text-dark-text-primary text-light-text-primary rounded-lg bg-gray-100 dark:bg-gray-700 outline-none focus:ring-1 focus:ring-light-primary dark:focus:ring-dark-primary border border-gray-300 dark:border-gray-600"
-          />
-          {errors.emailError && <span className="text-red-500 text-sm">Enter a valid email</span>}
-
-          <input
-            type="text"
-            placeholder="Enter phone number"
-            value={phone}
-            onChange={(e) => setPhone(e.target.value)}
-            className="w-full p-2 px-3 dark:text-dark-text-primary text-light-text-primary rounded-lg bg-gray-100 dark:bg-gray-700 outline-none focus:ring-1 focus:ring-light-primary dark:focus:ring-dark-primary border border-gray-300 dark:border-gray-600"
-          />
-          {errors.phoneError && <span className="text-red-500 text-sm">Phone number is required</span>}
-
-          <CustomDropdown
-            options={subscriptionOptions}
-            value={subscriptionType}
-            onChange={setSubscriptionType}
-            placeholder="Subscription Type"
-            className={`border border-gray-300 dark:border-gray-600 rounded-md ${errors.subscriptionError ? 'border-red-500' : 'border-gray-300'}`}
-            bgColor='bg-gray-100 dark:bg-gray-700'
-          />
-          {errors.subscriptionError && <span className="text-red-500">Subscription type is required</span>}
-
-          <CustomFileInput 
-            onFileChange={setSelectedFile} 
-            className={`bg-gray-100 dark:bg-gray-700 rounded-md border-none`}
-          />
-
-          <button
-            onClick={handleAddMember}
-            className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
-            disabled={isProcessing}
-          >
-            {isProcessing ? 'Processing...' : 'Add Member'}
-          </button>
-          {resultMessage && <span className="text-green-500">{resultMessage}</span>}
-        </div>
+  
+      {/* Result Section */}
+      <div className="flex flex-col items-center justify-center w-full h-1/4 bg-light-surface dark:bg-dark-surface text-light-text-primary dark:text-dark-text-primary rounded-xl shadow-inner p-4 mt-2">
+        <h2 className="text-lg  mb-2">Recognition Results</h2>
+        <p>
+          {resultMessage || 'Results will appear here after capturing an image.'}
+        </p>
       </div>
-
+  
       {/* Toggle Camera Button */}
       <div className="absolute top-4 right-4">
-        <button onClick={toggleCamera} className={`px-4 py-2 rounded ${isCameraOn ? 'bg-red-500' : 'bg-green-500'} text-white`}>
+        <button
+          onClick={toggleCamera}
+          className={`px-4 py-2 rounded ${isCameraOn ? 'bg-red-500' : 'bg-green-500'} text-white`}
+        >
           {isCameraOn ? 'Turn Off Camera' : 'Turn On Camera'}
         </button>
       </div>
-
-      {/* Modal for displaying captured image */}
-      {capturedImageUrl !== '' && (
-        <ImageModal onClose={() => setCapturedImageUrl('')} onUse={()=>handleImageUse()} onRetake={()=>handleImageRetake()}>
-          <div className="relative w-full h-full">
-            <img 
-              src={capturedImageUrl} 
-              alt="Captured" 
-              className="w-full h-full object-contain rounded-lg"
-            />
-          </div>
-        </ImageModal>
-      )}
     </div>
   );
 };
 
-export default FacialRecognition;
+export default Home;

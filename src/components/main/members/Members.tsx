@@ -2,7 +2,7 @@ import { Member } from '@/lib/types';
 import React, { useState, useMemo } from 'react';
 import { Search } from 'lucide-react';
 import MemberCard from './MemberCard';
-import CustomDropdown from '../../SelectDropDown';
+import CustomDropdown from '../../ui/SelectDropDown';
 import EditMemberModal from '../modals/EditMemberModal';
 import DeleteMemberModal from '../modals/DeleteMemberModal';
 import gym_2 from "../../../assets/images/gym_2.svg"

@@ -30,14 +30,14 @@ const MemberCard: React.FC<MemberCardProps> = ({ member, onEdit, onDelete }) => 
       {/* Header */}
       <div onClick={handleCardClick} className="flex items-center justify-between p-4 cursor-pointer">
         <div className="flex items-center space-x-4">
-          {member.icon ? (
+        {member.icon ? (
             <img
               src={member.icon}
               alt={member.name}
-              className="h-12 w-12 rounded-full object-cover"
+              className="h-16 w-16 rounded-full object-cover border-2 border-gray-200 dark:border-gray-600"
             />
           ) : (
-            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-blue-500 text-lg text-white">
+            <div className="flex h-16 w-16 items-center justify-center rounded-full bg-blue-500 text-2xl text-white border-2 border-blue-400">
               {member.name.charAt(0)}
             </div>
           )}
