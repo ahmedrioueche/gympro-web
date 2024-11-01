@@ -5,16 +5,14 @@ import { useTheme } from '../../context/ThemeContext';
 import { dict } from '../../lib/dict';
 import React, { useEffect, useState } from 'react';
 import { AiOutlineLoading3Quarters, AiOutlineCheckCircle } from 'react-icons/ai';
-import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '../../lib/store';
 import { useAuth } from '../../context/AuthContext';
+import { useLanguage } from '../../context/LanguageContext';
 
 const Loading: React.FC = () => {
+    const selectedLanguage = useLanguage();
     const [isDarkMode, setIsDarkMode] = useState(false);
     const { currentTheme } = useTheme();
     const navigate = useNavigate();
-    const dispatch = useDispatch();
-    const selectedLanguage = "english";
 
     const { user } = useAuth();
     console.log("user in loading", user);

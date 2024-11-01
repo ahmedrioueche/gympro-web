@@ -1,4 +1,6 @@
-import { Member } from '@/lib/types';
+import { useLanguage } from '../../../context/LanguageContext';
+import { dict } from '../../../lib/dict';
+import { Member } from '../../../lib/types';
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -6,19 +8,22 @@ interface MemberCardHoriProps {
   member: Member;
 }
 
-const getMembershipStyle = (type: string) => {
-  return type === 'Premium' ? 'bg-green-200 text-green-800' : 'bg-gray-200 text-gray-800';
-};
 
-const getStatusStyle = (isActive: boolean) => {
-  return isActive ? 'bg-green-200 text-green-800' : 'bg-red-200 text-red-800';
-};
 
 const MemberCardHori: React.FC<MemberCardHoriProps> = ({ member }) => {
   const navigate = useNavigate();
+  const selectedLanguage = useLanguage();
 
   const handleProfileClick = () => {
     navigate(`/main/profile/${member.id}`);
+  };
+
+  const getMembershipStyle = (type: string) => {
+    return type === dict[selectedLanguage].premiumMembership ? 'bg-green-200 text-green-800' : 'bg-gray-200 text-gray-800';
+  };
+  
+  const getStatusStyle = (isActive: boolean) => {
+    return isActive ? 'bg-green-200 text-green-800' : 'bg-red-200 text-red-800';
   };
 
   return (
@@ -26,7 +31,7 @@ const MemberCardHori: React.FC<MemberCardHoriProps> = ({ member }) => {
       <div className="flex items-center h-20">
         {/* Icon Section */}
         <div className="w-1/6 flex justify-center">
-        {member.icon ? (
+          {member.icon ? (
             <img
               src={member.icon}
               alt={member.name}
@@ -41,14 +46,14 @@ const MemberCardHori: React.FC<MemberCardHoriProps> = ({ member }) => {
 
         {/* Name and Join Date Section */}
         <div className="w-2/6 flex flex-col justify-center">
-          <h3 
+          <h3
             onClick={handleProfileClick}
             className="font-semibold text-gray-900 dark:text-white hover:text-blue-500 dark:hover:text-blue-400 cursor-pointer transition-colors"
           >
             {member.name}
           </h3>
           <div className="flex justify-center items-center space-x-2 text-sm text-gray-500 dark:text-gray-400">
-            <span>{new Date(member.joinDate).toLocaleDateString()}</span>
+            <span>{`${dict[selectedLanguage].joinDate} ${new Date(member.joinDate).toLocaleDateString()}`}</span>
           </div>
         </div>
 
@@ -58,7 +63,7 @@ const MemberCardHori: React.FC<MemberCardHoriProps> = ({ member }) => {
             {member.subscriptionType.toUpperCase()}
           </span>
           <span className={`inline-block rounded-full px-2 py-1 text-xs font-medium ${getStatusStyle(member.isSubscriptionActive)}`}>
-            {member.isSubscriptionActive ? 'ACTIVE' : 'INACTIVE'}
+            {member.isSubscriptionActive ? dict[selectedLanguage].activeStatus : dict[selectedLanguage].inactiveStatus}
           </span>
         </div>
       </div>

@@ -5,7 +5,10 @@ import MemberCard from './MemberCard';
 import CustomDropdown from '../../ui/SelectDropDown';
 import EditMemberModal from '../modals/EditMemberModal';
 import DeleteMemberModal from '../modals/DeleteMemberModal';
-import gym_2 from "../../../assets/images/gym_2.svg"
+import gym_2 from "../../../assets/images/gym_2.svg";
+import { dict } from '../../../lib/dict';
+import { useLanguage } from '../../../context/LanguageContext';
+
 
 const initialMembers: Member[] = [
   {
@@ -52,25 +55,6 @@ const initialMembers: Member[] = [
   },
 ];
 
-const statusOptions = [
-  { value: 'all', label: 'All Status' },
-  { value: 'active', label: 'Active' },
-  { value: 'inactive', label: 'Inactive' },
-  { value: 'pending', label: 'Pending' },
-];
-
-const membershipOptions = [
-  { value: 'all', label: 'All Memberships' },
-  { value: 'basic', label: 'Basic' },
-  { value: 'premium', label: 'Premium' },
-  { value: 'vip', label: 'VIP' },
-];
-
-const sortOptions = [
-  { value: 'name', label: 'Sort by Name' },
-  { value: 'joinDate', label: 'Sort by Join Date' },
-];
-
 const Members: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
@@ -80,16 +64,15 @@ const Members: React.FC = () => {
   const [memberToEdit, setMemberToEdit] = useState<Member>();
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
   const [memberToDeleteId, setMemberToDeleteId] = useState<number | string>();
-
-
+  const selectedLanguage = useLanguage();
   const filteredMembers = useMemo(() => {
     return initialMembers
       .filter(member => {
         const matchesSearch = member.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                            (member.email && member.email.toLowerCase().includes(searchQuery.toLowerCase()));
+                              (member.email && member.email.toLowerCase().includes(searchQuery.toLowerCase()));
         const matchesStatus = statusFilter === 'all' || 
-                            (statusFilter === 'active' && member.isSubscriptionActive) || 
-                            (statusFilter === 'inactive' && !member.isSubscriptionActive);
+                              (statusFilter === 'active' && member.isSubscriptionActive) || 
+                              (statusFilter === 'inactive' && !member.isSubscriptionActive);
         const matchesMembership = membershipFilter === 'all' || member.subscriptionType === membershipFilter;
         
         return matchesSearch && matchesStatus && matchesMembership;
@@ -102,8 +85,8 @@ const Members: React.FC = () => {
   }, [searchQuery, statusFilter, membershipFilter, sortBy]);
 
   const handleEdit = (member: Member) => {
-   setMemberToEdit(member);
-   setIsEditOpen(true);
+    setMemberToEdit(member);
+    setIsEditOpen(true);
   };
 
   const handleDelete = (id: string) => {
@@ -117,53 +100,53 @@ const Members: React.FC = () => {
       <div className="absolute md:-top-14 md:-right-20 right-24 -top-48 md:w-2/4 md:h-2/4 w-3/4 h-3/4 opacity-30  pointer-events-none">
         <img src={gym_2} alt="Gym" className="w-full h-full object-contain" />
       </div>
-  
+
       <div className="relative z-20 flex flex-col lg:flex-row lg:items-center lg:justify-between space-y-4 lg:space-y-0 mt-3 mb-8">
         <div className="flex flex-col lg:items-center lg:justify-center">
           {/* Search Bar */}
           <div className="relative w-full mb-4">
             <input
               type="text"
-              placeholder="Search by name or email..."
+              placeholder={dict[selectedLanguage].searchPlaceholder}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="w-full rounded-lg bg-light-surface dark:bg-dark-surface px-4 py-3 pl-10 text-sm border-none focus:ring-1 focus:ring-dark-primary outline-none dark:text-dark-text-primary"
             />
             <Search className="absolute left-3 top-2.5 h-4 w-4 mt-0.5 text-light-text-secondary dark:text-dark-text-secondary" />
           </div>
-  
+
           {/* Filters */}
           <div className="flex flex-col lg:flex-row space-y-4 lg:space-y-0 lg:space-x-4">
             <CustomDropdown
-              options={statusOptions}
+              options={dict[selectedLanguage].statusOptions}
               value={statusFilter}
               onChange={setStatusFilter}
-              placeholder="Select Status"
+              placeholder={dict[selectedLanguage].selectStatus}
               className="lg:w-44 bg-light-surface dark:bg-dark-surface"
             />
             <CustomDropdown
-              options={membershipOptions}
+              options={dict[selectedLanguage].membershipOptions}
               value={membershipFilter}
               onChange={setMembershipFilter}
-              placeholder="Select Membership"
+              placeholder={dict[selectedLanguage].selectMembership}
               className="lg:w-44 bg-light-surface dark:bg-dark-surface"
             />
             <CustomDropdown
-              options={sortOptions}
+              options={dict[selectedLanguage].sortOptions}
               value={sortBy}
               onChange={setSortBy}
-              placeholder="Sort By"
+              placeholder={dict[selectedLanguage].sortBy}
               className="lg:w-44 bg-light-surface dark:bg-dark-surface"
             />
           </div>
         </div>
       </div>
-  
+
       {/* Results Summary */}
       <div className="relative z-10 mb-4 text-sm text-light-text-secondary dark:text-dark-text-secondary">
-        Showing {filteredMembers.length} members
+        {dict[selectedLanguage].showingMembers.replace('{count}', filteredMembers.length.toString())}
       </div>
-  
+
       {/* Member Cards Grid */}
       <div className="relative z-10 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {filteredMembers.length > 0 ? (
@@ -177,11 +160,11 @@ const Members: React.FC = () => {
           ))
         ) : (
           <div className="col-span-full py-8 text-center text-light-text-secondary dark:text-dark-text-secondary">
-            No members found matching your criteria
+            {dict[selectedLanguage].noMembersFound}
           </div>
         )}
       </div>
-  
+
       {/* Modals */}
       <EditMemberModal
         member={memberToEdit}
@@ -196,4 +179,5 @@ const Members: React.FC = () => {
     </div>
   );
 };
+
 export default Members;

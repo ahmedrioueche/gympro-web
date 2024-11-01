@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
-import { FaCog, FaHome, FaKey, FaTachometerAlt, FaUser, FaUserPlus, FaUserShield, FaVideo } from 'react-icons/fa';
+import { FaHome, FaTachometerAlt, FaUserPlus, FaUserShield } from 'react-icons/fa';
 import { FaPeopleGroup } from 'react-icons/fa6';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { dict } from '../../lib/dict';
+import { useLanguage } from '../../context/LanguageContext';
 
 const Sidemenu = () => {
   const [isExpanded, setIsExpanded] = useState(true);
@@ -23,6 +25,8 @@ const Sidemenu = () => {
     const page: string | undefined = location.pathname.split('/').pop();
     setCurrentPage(page!);
   }, [location]);
+  
+  const selectedLanguage = useLanguage();
 
   return (
     <div
@@ -30,7 +34,7 @@ const Sidemenu = () => {
     >
       <button
         onClick={toggleSidebar}
-        className={`absolute top-2 ${isExpanded ? 'right-2' : 'right-6'} dark:text-dark-text-secondary text-light-text-primary  hover:text-dark-primary dark:hover:text-dark-primary`}
+        className={`absolute top-2 ${isExpanded ? 'right-2' : 'right-6'} dark:text-dark-text-secondary text-light-text-primary hover:text-dark-primary dark:hover:text-dark-primary`}
       >
         {isExpanded ? <ChevronLeft size={24} /> : <ChevronRight size={24} />}
       </button>
@@ -39,29 +43,28 @@ const Sidemenu = () => {
         <li onClick={() => handleLinkClick("home")} 
             className={`flex items-center space-x-2 p-2 cursor-pointer hover:bg-light-primary dark:hover:bg-dark-primary hover:text-dark-text-primary ${currentPage === "home" ? 'bg-gray-100 dark:bg-gray-700' : ''}`}>
           <FaHome className={`w-6 h-6 mr-2`} />
-          {isExpanded && <span className="font-f2">Home</span>}
+          {isExpanded && <span className="font-f2">{dict[selectedLanguage].home}</span>}
         </li>
         <li onClick={() => handleLinkClick("authentication")} 
             className={`flex items-center space-x-2 p-2 cursor-pointer hover:bg-light-primary dark:hover:bg-dark-primary hover:text-dark-text-primary ${currentPage === "authentication" ? 'bg-gray-100 dark:bg-gray-700' : ''}`}>
           <FaUserShield className={`w-6 h-6 mr-2`} />
-          {isExpanded && <span className="font-f2">Authentication</span>}
+          {isExpanded && <span className="font-f2">{dict[selectedLanguage].authentication}</span>}
         </li>
         <li onClick={() => handleLinkClick("add-member")} 
             className={`flex items-center space-x-2 p-2 cursor-pointer hover:bg-light-primary dark:hover:bg-dark-primary hover:text-dark-text-primary ${currentPage === "add-member" ? 'bg-gray-100 dark:bg-gray-700' : ''}`}>
           <FaUserPlus className={`w-6 h-6 mr-2`} />
-          {isExpanded && <span className="font-f2">Add Member</span>}
+          {isExpanded && <span className="font-f2">{dict[selectedLanguage].addMember}</span>}
         </li>
         <li onClick={() => handleLinkClick("members")} 
             className={`flex items-center space-x-2 p-2 cursor-pointer hover:bg-light-primary dark:hover:bg-dark-primary hover:text-dark-text-primary ${currentPage === "members" ? 'bg-gray-100 dark:bg-gray-700' : ''}`}>
           <FaPeopleGroup className="w-6 h-6 mr-2" />
-          {isExpanded && <span className="font-f2">Members</span>}
+          {isExpanded && <span className="font-f2">{dict[selectedLanguage].members}</span>}
         </li>
         <li onClick={() => handleLinkClick("dashboard")} 
             className={`flex items-center space-x-2 p-2 cursor-pointer hover:bg-light-primary dark:hover:bg-dark-primary hover:text-dark-text-primary ${currentPage === "dashboard" ? 'bg-gray-100 dark:bg-gray-700' : ''}`}>
           <FaTachometerAlt className="w-6 h-6 mr-2" />
-          {isExpanded && <span className="font-f2">Dashboard</span>}
+          {isExpanded && <span className="font-f2">{dict[selectedLanguage].dashboard}</span>}
         </li>
-      
       </ul>
     </div>
   );

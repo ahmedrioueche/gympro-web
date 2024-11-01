@@ -15,8 +15,10 @@ import { useTheme } from "../../context/ThemeContext";
 import logo from "../../assets/icons/logo.png"; 
 import { dict } from "../../lib/dict";
 import { useNavigate } from "react-router-dom";
+import { useLanguage } from '../../context/LanguageContext';
 
 const Navbar = () => {
+  const selectedLanguage = useLanguage();
   const { currentTheme, setCurrentTheme } = useTheme();
   const [activeLink, setActiveLink] = useState("home");
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -26,7 +28,6 @@ const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false); 
   const [isDarkMode, setIsDarkMode] = useState(false);
   const navigate = useNavigate();
-  const selectedLanguage = "english";
 
   const handleSetActiveLink = (link: string) => {
     setActiveLink(link);

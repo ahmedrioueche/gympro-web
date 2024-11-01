@@ -1,5 +1,7 @@
 import { FaTimes, FaTrash } from 'react-icons/fa';
 import React from 'react';
+import { dict } from '../../../lib/dict';
+import { useLanguage } from '../../../context/LanguageContext';
 
 interface DeleteMemberModalProps {
   memberId: number | string | undefined;
@@ -8,6 +10,8 @@ interface DeleteMemberModalProps {
 }
 
 const DeleteMemberModal: React.FC<DeleteMemberModalProps> = ({ memberId, isOpen, onClose }) => {
+  const selectedLanguage = useLanguage();
+
   const handleDelete = () => {
     console.log("Deleting member with ID:", memberId);
     onClose();
@@ -28,11 +32,11 @@ const DeleteMemberModal: React.FC<DeleteMemberModalProps> = ({ memberId, isOpen,
         <div className="flex justify-between items-center border-b border-gray-300 dark:border-gray-700 pb-4 mb-6">
           <div className="flex items-center text-red-500">
             <FaTrash className="text-base mr-3" />
-            <h2 className="text-lg font-semibold">Delete Member</h2>
+            <h2 className="text-lg font-semibold">{dict[selectedLanguage].deleteMemberHeader}</h2>
           </div>
           <button
             onClick={onClose}
-            className="p-2 rounded-full text-gray-800 dark:text-gray-300 bg-gray-200 dark:bg-gray-700 hover:bg-light-secondary dark:hover:bg-dark-secondary hover:text-dark-text-primary transition-colors duration-300"
+            className="p-2 rounded-full text-gray-800 dark:text-gray-300 bg-gray-200 dark:bg-gray-700 hover:bg-light-primary dark:hover:bg-dark-primary hover:text-dark-text-primary transition-colors duration-300"
           >
             <FaTimes size={14} />
           </button>
@@ -40,23 +44,23 @@ const DeleteMemberModal: React.FC<DeleteMemberModalProps> = ({ memberId, isOpen,
 
         {/* Content */}
         <div className="text-center text-gray-700 dark:text-gray-300 mb-6">
-          <p className="text-base">Are you sure you want to delete this member?</p>
-          <p className="text-sm text-gray-500 mt-2">This action cannot be undone.</p>
+          <p className="text-base">{dict[selectedLanguage].deleteMemberConfirmation}</p>
+          <p className="text-sm text-gray-500 mt-2">{dict[selectedLanguage].deleteMemberWarning}</p>
         </div>
 
         {/* Action Buttons */}
         <div className="flex justify-between space-x-20">
           <button
             onClick={onClose}
-            className="flex-1 px-4 py-2 text-base font-semibold bg-light-primary dark:bg-dark-primary rounded-lg hover:bg-light-secondary dark:hover:bg-dark-secondary text-dark-text-primary transition duration-200"
+            className="flex-1 px-4 py-2 text-base font-semibold bg-light-primary dark:bg-dark-primary rounded-lg hover:bg-light-accentPrimary dark:hover:bg-dark-accentPrimary text-dark-text-primary transition duration-200"
           >
-            Cancel
+            {dict[selectedLanguage].cancel}
           </button>
           <button
             onClick={handleDelete}
             className="flex-1 px-4 py-2 text-base font-semibold text-white bg-red-500 rounded-lg hover:bg-red-600 transition-colors duration-200"
           >
-            Delete
+            {dict[selectedLanguage].delete}
           </button>
         </div>
       </div>

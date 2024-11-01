@@ -2,9 +2,10 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { dict } from '../../lib/dict';
 import { featureTexts } from '../../lib/data';
+import { useLanguage } from '../../context/LanguageContext';
 
 const Features = () => {
-  const selectedLanguage = "english";
+  const selectedLanguage = useLanguage();
   return (
     <section id='features'>
       <div className={`py-12 px-6 bg-light-background dark:bg-dark-background`} >

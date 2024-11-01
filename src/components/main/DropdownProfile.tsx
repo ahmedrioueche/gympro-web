@@ -6,11 +6,12 @@ import logo from "../../assets/images/gym_5.svg"
 import { User } from '../../lib/types';
 import { Bot } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { useLanguage } from '../../context/LanguageContext';
 
 const DropdownProfile = ({ isOpen, onClose, onOpenPlansDropDown, onOpenChatBotDropDown }: { isOpen: boolean; onClose: () => void, onOpenPlansDropDown: ()=> void, onOpenChatBotDropDown: ()=> void }) => {
+  const selectedLanguage = useLanguage();
   const dropdownRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
-  const selectedLanguage = "english";
 
   const handleSettings = () => {
     navigate('/main/settings');
@@ -27,8 +28,6 @@ const DropdownProfile = ({ isOpen, onClose, onOpenPlansDropDown, onOpenChatBotDr
     { id: 2, label: dict[selectedLanguage].settings, onClick: handleSettings },
     { id: 3, label: dict[selectedLanguage].notifications, onClick: () => alert('Notifications') },
   ];
-
-  const handleDashboardClick = () => {};
 
   const handleLogout = async () => {
     // await signOut({ callbackUrl: "/api/auth/signout" });
@@ -51,6 +50,7 @@ const DropdownProfile = ({ isOpen, onClose, onOpenPlansDropDown, onOpenChatBotDr
   }, [isOpen, onClose]);
 
   const handleProfileClick = () => {
+    navigate("/main/profile");
     onClose();
   };
 
@@ -64,6 +64,15 @@ const DropdownProfile = ({ isOpen, onClose, onOpenPlansDropDown, onOpenChatBotDr
     onClose();
   }
 
+  const handleFeedBackClick = () => {
+    navigate("/main/feedback");
+    onClose();
+  }
+  const handleHelpClick = () => {
+    navigate("/main/help");
+    onClose();
+  }
+  
   return (
     <div className="relative">
       <div
@@ -154,7 +163,7 @@ const DropdownProfile = ({ isOpen, onClose, onOpenPlansDropDown, onOpenChatBotDr
           {/* Separation Line */}
           <hr className="border-gray-300 dark:border-gray-600 my-2" />
 
-          <div className="px-4 py-3 font-f2 hover:bg-light-primary dark:hover:bg-dark-primary hover:text-dark-text-primary cursor-pointer transition-colors duration-200">
+          <div onClick={handleHelpClick} className="px-4 py-3 font-f2 hover:bg-light-primary dark:hover:bg-dark-primary hover:text-dark-text-primary cursor-pointer transition-colors duration-200">
             <div className="flex items-center">
               <FaExclamationCircle className="mr-3 text-md" />
               <h3 className="text-md font-normal">
@@ -163,7 +172,7 @@ const DropdownProfile = ({ isOpen, onClose, onOpenPlansDropDown, onOpenChatBotDr
             </div>
           </div>
 
-          <div className="px-4 py-3 font-f2 hover:bg-light-primary dark:hover:bg-dark-primary hover:text-dark-text-primary cursor-pointer transition-colors duration-200">
+          <div onClick={handleFeedBackClick} className="px-4 py-3 font-f2 hover:bg-light-primary dark:hover:bg-dark-primary hover:text-dark-text-primary cursor-pointer transition-colors duration-200">
             <div className="flex items-center">
               <FaCommentAlt className="mr-3 text-md" />
               <h3 className="text-md font-normal">

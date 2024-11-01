@@ -4,11 +4,12 @@ import logo from "../../assets/icons/logo.png";
 import { FaSpinner } from 'react-icons/fa';
 import { dict } from '../../lib/dict'; 
 import { useNavigate } from 'react-router-dom'; 
+import { useLanguage } from '../../context/LanguageContext';
 
 const Banner = () => {
+  const selectedLanguage = useLanguage();
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate(); 
-  const selectedLanguage = "english";
 
   const handleClick = () => {
     setIsLoading(true);

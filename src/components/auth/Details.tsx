@@ -6,12 +6,13 @@ import logo from "../../assets/icons/logo.png";
 import { dict } from "../../lib/dict"; 
 import { useTheme } from "../../context/ThemeContext";
 import details from "../../assets/images/details.svg";
+import { useLanguage } from '../../context/LanguageContext';
 
 const Details: React.FC = () => {
   const navigate = useNavigate();
   const { currentTheme, setCurrentTheme } = useTheme();
   const user = useSelector((state: any) => state.user);
-  const selectedLanguage = "english";
+  const selectedLanguage = useLanguage();
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [isOwner, setIsOwner] = useState<"yes" | "no" | "">("");
   const [staffCount, setStaffCount] = useState<number | "">(0);

@@ -13,6 +13,10 @@ const Members = React.lazy(() => import('./members/Members'));
 const MemberProfile = React.lazy(() => import('./members/MemberProfile'));
 const GymDashboard = React.lazy(() => import('./dashboard/Dashboard'));
 const Settings = React.lazy(() => import('./settings/Settings'));
+const Feedback = React.lazy(() => import('./Feedback'));
+const UserProfile = React.lazy(() => import('./UserProfile'));
+const Help = React.lazy(() => import('./Help'));
+const Test = React.lazy(() => import('./Test'));
 
 const Main = () => {
   return (
@@ -36,6 +40,10 @@ const Main = () => {
               <Route path="profile/:memberId" element={<MemberProfile />} />
               <Route path="dashboard" element={<GymDashboard />} />
               <Route path="settings" element={<Settings />} />
+              <Route path="feedback" element={<Feedback />} />
+              <Route path="profile" element={<UserProfile />} />
+              <Route path="help" element={<Help />} />
+              <Route path="test" element={<Test />} />
             </Routes>
           </Suspense>
         </main>

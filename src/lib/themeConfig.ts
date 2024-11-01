@@ -2,7 +2,9 @@
 export const themes = {
     light: {
       primary: '#3B82F6', // Soft blue for primary color
-      secondary: '#1D4ED8',   
+      secondary: '#A855F7', // A shade of purple for secondary color
+      accentPrimary: '#1D4ED8', // Darker shade for accent primary (e.g., deep purple)
+      accentSecondary: '#6D28D9', // Darker purple for accent secondary
       background: '#FAF9F6', // Off white
       foreground: '#1E3A8A', // Dark blue for text
       surface: '#FFFFFF', // Pure white for cards and surfaces
@@ -14,7 +16,9 @@ export const themes = {
     },
     dark: {
       primary: '#1D4ED8', // Strong blue for primary color
-      secondary: '#2563EB',     // Slightly lighter blue to create contrast in dark theme
+      secondary: '#6D28D9', // A shade of purple for secondary color
+      accentPrimary: '#2563EB', // Darker shade for accent primary (e.g., deep purple)
+      accentSecondary: '#A855F7', // Darker purple for accent secondary
       background: '#0B0C10', // Dark navy for background
       foreground: '#E5E7EB', // Light gray for text on dark mode
       surface: '#101820', // Darker surface for cards
@@ -24,6 +28,7 @@ export const themes = {
         secondary: '#D1D5DB', // Muted gray for secondary text on dark mode
       },
     },
+    
     custom: {
       primary: '#1E90FF', // Dodger blue
       secondary: '#FFD700', // Gold

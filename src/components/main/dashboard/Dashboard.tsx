@@ -6,9 +6,12 @@ import {
 } from 'recharts';
 import { Card, CardHeader, CardTitle, CardContent } from '../../ui/Cards';
 import { Users, TrendingUp, DollarSign, Activity } from 'lucide-react';
-import gym_3 from "../../../assets/images/gym_3.svg"
+import { dict } from '../../../lib/dict';
+import { useLanguage } from '../../../context/LanguageContext';
 
 const GymDashboard = () => {
+  const selectedLanguage = useLanguage();
+
   // Sample data for the charts
   const membershipData = [
     { month: 'Jan', active: 120, cancelled: 20, new: 35 },
@@ -43,10 +46,10 @@ const GymDashboard = () => {
   ];
 
   const statsCards = [
-    { title: 'Total Members', value: '584', icon: Users, trend: '+12%' },
-    { title: 'Monthly Revenue', value: '$18,420', icon: DollarSign, trend: '+8%' },
-    { title: 'Active Plans', value: '432', icon: Activity, trend: '+5%' },
-    { title: 'Growth Rate', value: '12%', icon: TrendingUp, trend: '+2%' }
+    { title: dict[selectedLanguage].totalMembers, value: '584', icon: Users, trend: dict[selectedLanguage].trendPositive + '12%' },
+    { title: dict[selectedLanguage].monthlyRevenue, value: '$18,420', icon: DollarSign, trend: dict[selectedLanguage].trendPositive + '8%' },
+    { title: dict[selectedLanguage].activePlans, value: '432', icon: Activity, trend: dict[selectedLanguage].trendPositive + '5%' },
+    { title: dict[selectedLanguage].growthRate, value: '12%', icon: TrendingUp, trend: dict[selectedLanguage].trendPositive + '2%' }
   ];
 
   return (
@@ -80,7 +83,7 @@ const GymDashboard = () => {
         <Card className="bg-light-surface dark:bg-dark-surface">
           <CardHeader>
             <CardTitle className="text-light-text-primary dark:text-dark-text-primary">
-              Membership Trends
+              {dict[selectedLanguage].membershipTrends}
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -103,7 +106,7 @@ const GymDashboard = () => {
         <Card className="bg-light-surface dark:bg-dark-surface">
           <CardHeader>
             <CardTitle className="text-light-text-primary dark:text-dark-text-primary">
-              Revenue Analysis
+              {dict[selectedLanguage].revenueAnalysis}
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -125,7 +128,7 @@ const GymDashboard = () => {
         <Card className="bg-light-surface dark:bg-dark-surface">
           <CardHeader>
             <CardTitle className="text-light-text-primary dark:text-dark-text-primary">
-              Daily Activity
+              {dict[selectedLanguage].dailyActivity}
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -145,7 +148,7 @@ const GymDashboard = () => {
         <Card className="bg-light-surface dark:bg-dark-surface">
           <CardHeader>
             <CardTitle className="text-light-text-primary dark:text-dark-text-primary">
-              Subscription Types
+              {dict[selectedLanguage].subscriptionTypes}
             </CardTitle>
           </CardHeader>
           <CardContent>

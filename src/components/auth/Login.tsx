@@ -8,6 +8,7 @@ import { apiAuthenticateUser } from "../../lib/apiHelper";
 import { useDispatch } from "react-redux";
 import { setUser } from '../../features/userSlice'; 
 import { useNavigate } from "react-router-dom";
+import { useLanguage } from "../../context/LanguageContext";
 
 const LoginForm: React.FC = ({}) => {
   const [email, setEmail] = useState<string>("");
@@ -18,7 +19,7 @@ const LoginForm: React.FC = ({}) => {
   const [isDarkMode, setIsDarkMode] = useState(false);
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const selectedLanguage = "english";
+  const selectedLanguage = useLanguage();
   
   useEffect(() => {
     setIsDarkMode(currentTheme === "dark");

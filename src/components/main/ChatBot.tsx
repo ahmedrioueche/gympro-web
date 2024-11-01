@@ -1,5 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Send, X, Bot } from 'lucide-react';
+import { dict } from '../../lib/dict';
+import { useLanguage } from '../../context/LanguageContext';
 
 interface Message {
   id: number;
@@ -11,8 +13,9 @@ const ChatbotDropdown: React.FC<{
   isOpen: boolean;
   onClose: () => void;
 }> = ({ isOpen, onClose }) => {
+  const selectedLanguage = useLanguage();
   const [messages, setMessages] = useState<Message[]>([
-    { id: 1, text: "Hello! I'm your fitness assistant. How can I help you today?", isBot: true }
+    { id: 1, text: dict[selectedLanguage].assistantGreeting, isBot: true }
   ]);
   const [inputMessage, setInputMessage] = useState('');
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -35,35 +38,38 @@ const ChatbotDropdown: React.FC<{
 
     // Simulate bot response
     setTimeout(() => {
-      setMessages(prev => [...prev, {
-        id: Date.now() + 1,
-        text: "I'm here to help! Let me process your request...",
-        isBot: true
-      }]);
+      setMessages(prev => [
+        ...prev,
+        {
+          id: Date.now() + 1,
+          text: dict[selectedLanguage].botResponse,
+          isBot: true
+        }
+      ]);
     }, 1000);
   };
 
-    // Close dropdown on outside click
-    useEffect(() => {
-        const handleClickOutside = (event: MouseEvent) => {
-          if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
-            onClose();
-          }
-        };
-    
-        if (isOpen) {
-          document.addEventListener('mousedown', handleClickOutside);
-        }
-    
-        return () => {
-          document.removeEventListener('mousedown', handleClickOutside);
-        };
-      }, [isOpen, onClose]);
+  // Close dropdown on outside click
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        onClose();
+      }
+    };
+
+    if (isOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [isOpen, onClose]);
 
   return (
     <div
       ref={dropdownRef}
-      className={`absolute right-0 top-16 w-80 md:w-96 bg-light-surface dark:bg-dark-surface rounded-lg shadow-xl transform transition-all duration-300 ease-out origin-top ${
+      className={`absolute right-0 top-16 w-80 md:w-96 z-100 bg-light-surface dark:bg-dark-surface rounded-lg shadow-xl transform transition-all duration-300 ease-out origin-top ${
         isOpen 
           ? 'opacity-100 scale-y-100 translate-y-0' 
           : 'opacity-0 scale-y-0 -translate-y-4 pointer-events-none'
@@ -73,7 +79,7 @@ const ChatbotDropdown: React.FC<{
       <div className="flex items-center justify-between p-3 border-b dark:border-gray-700">
         <div className="flex items-center space-x-2">
           <Bot className="w-5 h-5 text-blue-500" />
-          <h2 className="text-base font-semibold dark:text-white">GymPro Assistant</h2>
+          <h2 className="text-base font-semibold dark:text-white">{dict[selectedLanguage].botTitle}</h2>
         </div>
         <button 
           onClick={onClose}
@@ -111,7 +117,7 @@ const ChatbotDropdown: React.FC<{
             type="text"
             value={inputMessage}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => setInputMessage(e.target.value)}
-            placeholder="Type your message..."
+            placeholder={dict[selectedLanguage].botPlaceholder}
             className="flex-1 p-2 text-sm border dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
           />
           <button

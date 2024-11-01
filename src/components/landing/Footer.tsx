@@ -1,8 +1,9 @@
 import { dict } from '../../lib/dict';
 import React from 'react';
+import { useLanguage } from '../../context/LanguageContext';
 
 const Footer: React.FC = () => {
-  const selectedLanguage = "english";
+  const selectedLanguage = useLanguage();
   return (
     <footer className="bg-light-background dark:bg-dark-background text-light-text-primary dark:text-dark-text-primary py-4">
       <div className="max-w-7xl mx-auto text-center">

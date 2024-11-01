@@ -10,12 +10,13 @@ import { RootState } from "../../lib/store";
 import { capitalizeFirstLetter } from "../../lib/formater";
 import { useAuth } from "../../context/AuthContext";
 import { useNavigate } from "react-router-dom";
+import { useLanguage } from '../../context/LanguageContext';
 
 function Verify() {
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const { setCurrentTheme } = useTheme();
     const [isDarkMode] = useState(false);
-    const selectedLanguage = "english";
+    const selectedLanguage = useLanguage();
     const [verificationCode] = useState<string>();
     const codeSentRef = useRef(false);
     const [userEmail, setUserEmail] = useState<string | null>('');
@@ -38,7 +39,7 @@ function Verify() {
         return;
       }
 
-      const shouldSendCode = renderCount.current > 2 && user?.email && !codeSentRef.current && !user.isEmailValidated;
+      const shouldSendCode = true; //renderCount.current > 2 && user?.email && !codeSentRef.current && !user.isEmailValidated;
     
       if (shouldSendCode) {
         console.log("sending an email to: ", user?.email);
@@ -79,7 +80,9 @@ function Verify() {
         setIsLoading(true);
         setResult({status: '', message: ''});
         if(sentVerificationCode === userVerificationCode) {
-          const updateData = { isEmailValidated: true };
+          const userLanguage = navigator.language
+          const languageCode = userLanguage.split('-')[0];
+          const updateData = { isEmailValidated: true, language: languageCode};
           const response = await apiUpdateUser(null, user?.email, updateData);
           console.log("response", response);
           navigate('/auth/Details'); 

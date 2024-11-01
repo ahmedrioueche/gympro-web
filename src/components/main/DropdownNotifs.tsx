@@ -1,14 +1,15 @@
-import { dict } from '@/lib/dict';
-import { formatDateTime } from '@/lib/formater';
-import { Notif } from '@/lib/types';
+import { dict } from '../../lib/dict';
+import { formatDateTime } from '../../lib/formater';
+import { Notif } from '../../lib/types';
 import { useEffect, useRef, useState } from 'react';
-import { FaBell, FaEnvelope } from 'react-icons/fa';
+import { FaEnvelope } from 'react-icons/fa';
+import { useLanguage } from '../../context/LanguageContext';
 
 const DropdownNotifs = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) => {
+  const selectedLanguage = useLanguage();
   const dropdownRef = useRef<HTMLDivElement>(null);
   const [unreadCount, setUnreadCount] = useState(0);
   const [sortedNotifs, setSortedNotifs] = useState<any[]>([]);
-  const selectedLanguage = "english";
   const notifications = [
     { id: 1, label: 'New comment on your post', onClick: () => alert('Clicked notification 1') },
     { id: 2, label: 'New follower', onClick: () => alert('Clicked notification 2') },
@@ -43,13 +44,19 @@ const DropdownNotifs = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => v
     throw new Error('Function not implemented.');
   }
 
-  return isOpen ? (
-    <div className="relative mt-10">
-    
-      {isOpen && (
-        <div  ref={dropdownRef} 
-        className="absolute right-[-50px] mt-3 w-72 h-[32rem] bg-light-background dark:bg-dark-background border border-gray-300 dark:border-gray-600 rounded-lg shadow-lg z-50 overflow-y-scroll scrollbar-hide">
-        <div className="py-2">
+  return (
+    <div className="relative">
+      <div
+        ref={dropdownRef}
+        className={`absolute right-2 mt-2 w-72 md:w-84 h-52 py-4 max-h-[80vh] bg-light-surface dark:bg-dark-surface border border-gray-300 dark:border-gray-600 text-light-text-primary dark:text-dark-text-primary rounded-lg shadow-lg z-50 overflow-y-hidden scrollbar-hide transform transition-all duration-300 ease-out origin-top ${
+          isOpen 
+            ? 'opacity-100 scale-y-100 translate-y-0' 
+            : 'opacity-0 scale-y-0 -translate-y-4 pointer-events-none'
+        }`}
+      >
+        <div className={`overflow-y-auto scrollbar-hide overflow-x-hidden transition-all duration-300 ease-out ${
+          isOpen ? 'max-h-[200vh]' : 'max-h-0'
+        }`}>
             {sortedNotifs.length === 0 ? (
               <p className="text-center text-light-text-primary dark:text-dark-text-primary">{dict[selectedLanguage].noNotification}</p>
             ) : (
@@ -78,9 +85,8 @@ const DropdownNotifs = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => v
             )}
           </div>
         </div>
-      )}
     </div>
-  ) : null;
+  );
 };
 
 export default DropdownNotifs;

@@ -2,6 +2,8 @@ import CustomDropdown from '../../ui/SelectDropDown';
 import { Member } from '../../../lib/types';
 import React, { useState } from 'react';
 import { FaTimes, FaEdit } from 'react-icons/fa';
+import { dict } from '../../../lib/dict';
+import { useLanguage } from '../../../context/LanguageContext';
 
 interface EditMemberModalProps {
   member: Member | undefined;
@@ -12,10 +14,11 @@ interface EditMemberModalProps {
 const EditMemberModal: React.FC<EditMemberModalProps> = ({ member, isOpen, onClose }) => {
   const [formData, setFormData] = useState<Partial<Member>>(member || {});
   const [subscriptionType, setSubscriptionType] = useState<string>('');
+  const selectedLanguage = useLanguage();
 
   const subscriptionOptions = [
-    { value: 'monthly', label: 'Monthly' },
-    { value: 'yearly', label: 'Yearly' },
+    { value: 'monthly', label: dict[selectedLanguage].optionMonthly },
+    { value: 'yearly', label: dict[selectedLanguage].optionYearly },
   ];
 
   const handleSubmit = () => {
@@ -45,11 +48,11 @@ const EditMemberModal: React.FC<EditMemberModalProps> = ({ member, isOpen, onClo
         <div className="flex justify-between items-center border-b border-gray-300 dark:border-gray-700 pb-3 mb-4">
           <div className="flex items-center text-light-text dark:text-dark-text">
             <FaEdit className="text-xl text-light-primary dark:text-dark-primary mr-3" />
-            <h2 className="text-lg font-semibold">Edit Member</h2>
+            <h2 className="text-lg font-semibold">{dict[selectedLanguage].editMemberTitle}</h2>
           </div>
           <button
             onClick={onClose}
-            className="p-2 rounded-full text-gray-800 dark:text-gray-300 bg-gray-200 dark:bg-gray-700 hover:bg-light-secondary dark:hover:bg-dark-secondary hover:text-dark-text-primary transition-colors duration-300"
+            className="p-2 rounded-full text-gray-800 dark:text-gray-300 bg-gray-200 dark:bg-gray-700 hover:bg-light-primary dark:hover:bg-dark-primary hover:text-dark-text-primary transition-colors duration-300"
           >
             <FaTimes size={16} />
           </button>
@@ -59,7 +62,7 @@ const EditMemberModal: React.FC<EditMemberModalProps> = ({ member, isOpen, onClo
         <div className="space-y-4 text-gray-700 dark:text-gray-300">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
-              <label className="text-sm font-medium">Name</label>
+              <label className="text-sm font-medium">{dict[selectedLanguage].labelName}</label>
               <input
                 type="text"
                 name="name"
@@ -69,7 +72,7 @@ const EditMemberModal: React.FC<EditMemberModalProps> = ({ member, isOpen, onClo
               />
             </div>
             <div className="space-y-2">
-              <label className="text-sm font-medium">Email</label>
+              <label className="text-sm font-medium">{dict[selectedLanguage].labelEmail}</label>
               <input
                 type="email"
                 name="email"
@@ -79,7 +82,7 @@ const EditMemberModal: React.FC<EditMemberModalProps> = ({ member, isOpen, onClo
               />
             </div>
             <div className="space-y-2">
-              <label className="text-sm font-medium">Phone</label>
+              <label className="text-sm font-medium">{dict[selectedLanguage].labelPhone}</label>
               <input
                 type="tel"
                 name="phone"
@@ -89,13 +92,14 @@ const EditMemberModal: React.FC<EditMemberModalProps> = ({ member, isOpen, onClo
               />
             </div>
             <div className="space-y-2">
-              <label className="text-sm font-medium">Subscription Type</label>
+              <label className="text-sm font-medium">{dict[selectedLanguage].labelSubscriptionType}</label>
               <CustomDropdown
                 options={subscriptionOptions}
                 value={subscriptionType}
                 onChange={setSubscriptionType}
-                placeholder="Subscription Type"
-                className={`border border-gray-300 dark:border-gray-600 bg-gray-100 dark:bg-gray-700 rounded-md`}
+                placeholder={dict[selectedLanguage].placeholderSubscriptionType}
+                className={`border border-gray-300 dark:border-gray-600  rounded-md`}
+                bgColor='bg-gray-100 dark:bg-gray-700'
               />
             </div>
           </div>
@@ -105,15 +109,15 @@ const EditMemberModal: React.FC<EditMemberModalProps> = ({ member, isOpen, onClo
         <div className="flex justify-between space-x-4 mt-10">
           <button
             onClick={onClose}
-            className="flex-1 px-4 py-2 max-w-40 text-base font-semibold bg-light-primary dark:bg-dark-primary rounded-lg hover:bg-light-secondary dark:hover:bg-dark-secondary text-dark-text-primary transition duration-200"
+            className="flex-1 px-4 py-2 max-w-40 text-base font-semibold bg-light-primary dark:bg-dark-primary rounded-lg hover:bg-light-accentPrimary dark:hover:bg-dark-accentPrimary text-dark-text-primary transition duration-200"
           >
-            Cancel
+            {dict[selectedLanguage].buttonCancel}
           </button>
           <button
             onClick={handleSubmit}
             className="flex-1 px-4 py-2 max-w-40 text-base font-semibold text-white bg-red-500 rounded-lg hover:bg-red-600 transition-colors duration-200"
           >
-            Save
+            {dict[selectedLanguage].buttonSave}
           </button>
         </div>
       </div>

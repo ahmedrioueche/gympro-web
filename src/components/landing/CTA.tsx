@@ -6,11 +6,12 @@ import { useInView } from 'react-intersection-observer';
 import { useTheme } from '../../context/ThemeContext';
 import { Link } from 'react-router-dom';
 import { dict } from '../../lib/dict';
+import { useLanguage } from '../../context/LanguageContext';
 
 const CTA: React.FC = () => {
+  const selectedLanguage = useLanguage();
   const { currentTheme } = useTheme();
   const [isDarkMode, setIsDarkMode] = useState(false);
-  const selectedLanguage = "english";
 
   useEffect(() => {
     setIsDarkMode(currentTheme === "dark");

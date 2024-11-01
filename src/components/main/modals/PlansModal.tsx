@@ -1,5 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Send, X, Bot, Crown, CheckCircle } from 'lucide-react';
+import { X, Crown, CheckCircle } from 'lucide-react';
+import { dict } from '../../../lib/dict';
+import { useLanguage } from '../../../context/LanguageContext';
 
 interface Plan {
   id: number;
@@ -14,43 +16,45 @@ interface TrialDropDownProps {
   onClose: () => void;
 }
 
+
 const TrialDropDown: React.FC<TrialDropDownProps> = ({ isOpen, onClose }) => {
+  const selectedLanguage = useLanguage();
   const dropdownRef = useRef<HTMLDivElement>(null);
   const [selectedPlan, setSelectedPlan] = useState<number | null>(null);
 
   const plans: Plan[] = [
     {
       id: 1,
-      name: "Starter",
-      price: "$9/mo",
+      name: dict[selectedLanguage].plans[0].name,
+      price: dict[selectedLanguage].plans[0].price,
       features: [
-        "Up to 1,000 messages",
-        "Basic support",
-        "1 team member"
+        dict[selectedLanguage].plansFeatures[0],
+        dict[selectedLanguage].plansFeatures[1],
+        dict[selectedLanguage].plansFeatures[2]
       ]
     },
     {
       id: 2,
-      name: "Pro",
-      price: "$29/mo",
+      name: dict[selectedLanguage].plans[1].name,
+      price: dict[selectedLanguage].plans[1].price,
       features: [
-        "Up to 10,000 messages",
-        "Priority support",
-        "5 team members",
-        "Advanced analytics"
+        dict[selectedLanguage].plansFeatures[3],
+        dict[selectedLanguage].plansFeatures[4],
+        dict[selectedLanguage].plansFeatures[5],
+        dict[selectedLanguage].plansFeatures[6]
       ],
       popular: true
     },
     {
       id: 3,
-      name: "Enterprise",
-      price: "$99/mo",
+      name: dict[selectedLanguage].plans[2].name,
+      price: dict[selectedLanguage].plans[2].price,
       features: [
-        "Unlimited messages",
-        "24/7 support",
-        "Unlimited team members",
-        "Custom features",
-        "API access"
+        dict[selectedLanguage].plansFeatures[7],
+        dict[selectedLanguage].plansFeatures[8],
+        dict[selectedLanguage].plansFeatures[9],
+        dict[selectedLanguage].plansFeatures[10],
+        dict[selectedLanguage].plansFeatures[11]
       ]
     }
   ];
@@ -83,7 +87,7 @@ const TrialDropDown: React.FC<TrialDropDownProps> = ({ isOpen, onClose }) => {
         <div className="flex items-center justify-between p-4 border-b">
           <div className="flex items-center space-x-2">
             <Crown className="w-6 h-6 text-yellow-500" />
-            <h2 className="text-xl font-semibold">Choose Your Plan</h2>
+            <h2 className="text-xl font-semibold">{dict[selectedLanguage].chooseYourPlan}</h2>
           </div>
           <button
             onClick={onClose}
@@ -106,7 +110,7 @@ const TrialDropDown: React.FC<TrialDropDownProps> = ({ isOpen, onClose }) => {
               {plan.popular && (
                 <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
                   <span className="bg-blue-500 text-white text-xs px-3 py-1 rounded-full">
-                    Popular
+                    {dict[selectedLanguage].popular}
                   </span>
                 </div>
               )}
@@ -129,7 +133,7 @@ const TrialDropDown: React.FC<TrialDropDownProps> = ({ isOpen, onClose }) => {
                     : 'bg-gray-100 hover:bg-gray-200 text-gray-800'
                 }`}
               >
-                {selectedPlan === plan.id ? 'Selected' : 'Select Plan'}
+                {selectedPlan === plan.id ? dict[selectedLanguage].selected : dict[selectedLanguage].selectPlan}
               </button>
             </div>
           ))}
@@ -141,7 +145,7 @@ const TrialDropDown: React.FC<TrialDropDownProps> = ({ isOpen, onClose }) => {
             onClick={onClose}
             className="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
           >
-            Cancel
+            {dict[selectedLanguage].cancel}
           </button>
           <button
             className={`px-4 py-2 rounded-lg transition-colors ${
@@ -151,7 +155,7 @@ const TrialDropDown: React.FC<TrialDropDownProps> = ({ isOpen, onClose }) => {
             }`}
             disabled={!selectedPlan}
           >
-            Confirm Selection
+            {dict[selectedLanguage].confirmSelection}
           </button>
         </div>
       </div>

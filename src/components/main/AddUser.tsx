@@ -7,6 +7,7 @@ import ImageModal from './modals/ImageModal';
 import { Member } from '../../lib/types';
 import { MemberApi } from '../../lib/apiHelper';
 import gym_6 from "../../assets/images/gym_6.svg"
+import { useLanguage } from '../../context/LanguageContext';
 
 interface Option {
   value: string;
@@ -23,6 +24,7 @@ interface Errors {
 }
 
 const FacialRecognition: React.FC = () => {
+  const selectedLanguage = useLanguage();
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const streamRef = useRef<MediaStream | null>(null);
@@ -47,7 +49,6 @@ const FacialRecognition: React.FC = () => {
     subscriptionError: false,
   });
   
-  const selectedLanguage = 'english';
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const memberApi = new MemberApi;
 
@@ -59,13 +60,13 @@ const FacialRecognition: React.FC = () => {
   };
 
   const subscriptionOptions: Option[] = [
-    { value: 'monthly', label: 'Monthly' },
-    { value: 'yearly', label: 'Yearly' },
+    { value: 'monthly', label: dict[selectedLanguage].monthly },
+    { value: 'yearly', label: dict[selectedLanguage].yearly  },
   ];
 
   const genderOptions: Option[] = [
-    { value: 'male', label: 'Male' },
-    { value: 'female', label: 'Female' },
+    { value: 'male', label: dict[selectedLanguage].male },
+    { value: 'female', label: dict[selectedLanguage].female },
   ];
 
   
@@ -286,7 +287,7 @@ const handleAddMember = async () => {
                   onClick={handleCapture}
                   className="px-6 py-2 text-dark-text-primary rounded-lg opacity-0 group-hover:opacity-100 transition duration-300 bg-light-primary dark:bg-dark-primary hover:bg-light-secondary dark:hover:bg-dark-secondary"
                 >
-                  Capture Image
+                  {dict[selectedLanguage].captureImage}
                 </button>
               )}
               <button 
@@ -295,18 +296,18 @@ const handleAddMember = async () => {
                   isCameraOn ? 'bg-red-500 hover:bg-red-600' : 'bg-light-primary dark:bg-dark-primary hover:bg-light-secondary dark:hover:bg-dark-secondary transition duration-300'
                 } text-white`}
               >
-                {isCameraOn ? 'Turn Off Camera' : 'Turn On Camera'}
+                {isCameraOn ? dict[selectedLanguage].turnOffCamera : dict[selectedLanguage].turnOnCamera}
               </button>
             </div>
             {isCameraOn && (
               <p className="text-white text-sm mt-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                Or press <span className="font-semibold">Ctrl+x</span> to capture image
+                {dict[selectedLanguage].captureImageShortcut}
               </p>
             )}
           </div>
         )}
       </div>
-
+  
       {/* Input Section */}
       <div className={`flex flex-col lg:w-4/12 p-4 scrollbar-hide bg-light-surface dark:bg-dark-surface rounded-t-xl lg:rounded-l-xl shadow-lg space-y-4 lg:space-y-6 max-h-full overflow-auto`}>
         <div className="flex items-center justify-center space-x-2">
@@ -315,101 +316,89 @@ const handleAddMember = async () => {
             {dict[selectedLanguage].logo}
           </span>
         </div>
-
+  
         <div className="flex flex-col justify-center space-y-4 ">
           <input
             type="text"
-            placeholder="Enter name"
+            placeholder={dict[selectedLanguage].namePlaceholder}
             value={personName}
             onChange={(e) => setPersonName(e.target.value)}
             className="w-full p-2 px-3 rounded-lg bg-gray-100 dark:text-dark-text-primary text-light-text-primary dark:bg-gray-700 outline-none focus:ring-1 focus:ring-light-primary dark:focus:ring-dark-primary border border-gray-300 dark:border-gray-600"
           />
-          {errors.nameError && <span className="text-red-500 text-sm">Name is required</span>}
-
+          {errors.nameError && <span className="text-red-500 text-sm">{dict[selectedLanguage].nameRequired}</span>}
+  
           <input
             type="text"
-            placeholder="Enter age"
+            placeholder={dict[selectedLanguage].agePlaceholder}
             value={age}
             onChange={(e) => setAge(e.target.value)}
             className="w-full p-2 px-3 rounded-lg dark:text-dark-text-primary text-light-text-primary bg-gray-100 dark:bg-gray-700 outline-none focus:ring-1 focus:ring-light-primary dark:focus:ring-dark-primary border border-gray-300 dark:border-gray-600"
           />
-          {errors.ageError && <span className="text-red-500 text-sm">Enter a valid age</span>}
-
+          {errors.ageError && <span className="text-red-500 text-sm">{dict[selectedLanguage].validAge}</span>}
+  
           <CustomDropdown
             options={genderOptions}
             value={gender}
             onChange={setGender}
-            placeholder="Gender"
-            className={`border border-gray-300 dark:border-gray-600 rounded-md  ${errors.genderError ? 'border-red-500' : 'border-gray-300'}`}
+            placeholder={dict[selectedLanguage].genderPlaceholder}
+            className={`border border-gray-300 dark:border-gray-600 rounded-md ${errors.genderError ? 'border-red-500' : 'border-gray-300'}`}
             bgColor='bg-gray-100 dark:bg-gray-700'
           />
-          {errors.genderError && <span className="text-red-500 text-sm">Gender is required</span>}
-
+          {errors.genderError && <span className="text-red-500 text-sm">{dict[selectedLanguage].genderRequired}</span>}
+  
           <input
             type="email"
-            placeholder="Enter email"
+            placeholder={dict[selectedLanguage].emailPlaceholder}
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             className="w-full p-2 px-3 dark:text-dark-text-primary text-light-text-primary rounded-lg bg-gray-100 dark:bg-gray-700 outline-none focus:ring-1 focus:ring-light-primary dark:focus:ring-dark-primary border border-gray-300 dark:border-gray-600"
           />
-          {errors.emailError && <span className="text-red-500 text-sm">Enter a valid email</span>}
-
+          {errors.emailError && <span className="text-red-500 text-sm">{dict[selectedLanguage].validEmail}</span>}
+  
           <input
             type="text"
-            placeholder="Enter phone number"
+            placeholder={dict[selectedLanguage].phonePlaceholder}
             value={phone}
             onChange={(e) => setPhone(e.target.value)}
             className="w-full p-2 px-3 dark:text-dark-text-primary text-light-text-primary rounded-lg bg-gray-100 dark:bg-gray-700 outline-none focus:ring-1 focus:ring-light-primary dark:focus:ring-dark-primary border border-gray-300 dark:border-gray-600"
           />
-          {errors.phoneError && <span className="text-red-500 text-sm">Phone number is required</span>}
-
+          {errors.phoneError && <span className="text-red-500 text-sm">{dict[selectedLanguage].phoneRequired}</span>}
+  
           <CustomDropdown
             options={subscriptionOptions}
             value={subscriptionType}
             onChange={setSubscriptionType}
-            placeholder="Subscription Type"
+            placeholder={dict[selectedLanguage].subscriptionTypePlaceholder}
             className={`border border-gray-300 dark:border-gray-600 rounded-md ${errors.subscriptionError ? 'border-red-500' : 'border-gray-300'}`}
             bgColor='bg-gray-100 dark:bg-gray-700'
           />
-          {errors.subscriptionError && <span className="text-red-500">Subscription type is required</span>}
-
+          {errors.subscriptionError && <span className="text-red-500">{dict[selectedLanguage].subscriptionRequired}</span>}
+  
           <CustomFileInput 
             onFileChange={setSelectedFile} 
             className={`bg-gray-100 dark:bg-gray-700 rounded-md border-none`}
           />
-
+  
           <button
             onClick={handleAddMember}
             className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
             disabled={isProcessing}
           >
-            {isProcessing ? 'Processing...' : 'Add Member'}
+            {isProcessing ? dict[selectedLanguage].processing : dict[selectedLanguage].addMember}
           </button>
-          {resultMessage && <span className="text-green-500">{resultMessage}</span>}
+          {resultMessage && <span className="text-green-500">{dict[selectedLanguage].successMessage}</span>}
         </div>
       </div>
-
+  
       {/* Toggle Camera Button */}
       <div className="absolute top-4 right-4">
         <button onClick={toggleCamera} className={`px-4 py-2 rounded ${isCameraOn ? 'bg-red-500' : 'bg-green-500'} text-white`}>
-          {isCameraOn ? 'Turn Off Camera' : 'Turn On Camera'}
+          {isCameraOn ? dict[selectedLanguage].turnOffCamera : dict[selectedLanguage].turnOnCamera}
         </button>
       </div>
-
-      {/* Modal for displaying captured image */}
-      {capturedImageUrl !== '' && (
-        <ImageModal onClose={() => setCapturedImageUrl('')} onUse={()=>handleImageUse()} onRetake={()=>handleImageRetake()}>
-          <div className="relative w-full h-full">
-            <img 
-              src={capturedImageUrl} 
-              alt="Captured" 
-              className="w-full h-full object-contain rounded-lg"
-            />
-          </div>
-        </ImageModal>
-      )}
     </div>
   );
+  
 };
 
 export default FacialRecognition;

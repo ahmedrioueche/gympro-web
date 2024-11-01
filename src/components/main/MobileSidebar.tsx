@@ -1,15 +1,15 @@
 import { dict } from '../../lib/dict';
 import React, { useEffect, useRef, useState } from 'react';
-import { FaTachometerAlt, FaCog, FaBell, FaKey, FaVideo, FaHome, FaUserPlus, FaArrowAltCircleLeft, FaArrowLeft, FaUserShield } from 'react-icons/fa';
+import { FaTachometerAlt, FaHome, FaUserPlus, FaArrowLeft, FaUserShield } from 'react-icons/fa';
 import { FaPeopleGroup } from 'react-icons/fa6';
 import logo from "../../assets/icons/logo.png";
 import { useLocation, useNavigate } from 'react-router-dom';
-import gym_3 from "../../assets/images/gym_3.svg"
+import { useLanguage } from '../../context/LanguageContext';
 
 const MobileSidebar: React.FC<{ isOpen: boolean; onClose: () => void }> = ({ isOpen, onClose }) => {
   const dropdownRef = useRef<HTMLDivElement>(null);
   const [currentPage, setCurrentPage] = useState("stream");
-  const selectedLanguage = "english"; 
+  const selectedLanguage = useLanguage();
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -36,7 +36,6 @@ const MobileSidebar: React.FC<{ isOpen: boolean; onClose: () => void }> = ({ isO
     onClose();
   }
 
-  
   useEffect(() => {
     const page: string | undefined = location.pathname.split('/').pop();
     setCurrentPage(page!);
@@ -52,7 +51,7 @@ const MobileSidebar: React.FC<{ isOpen: boolean; onClose: () => void }> = ({ isO
           <a href="/main/home" className="relative cursor-pointer flex items-center">
             <img
               src={logo}
-              alt="GymPro Logo"
+              alt={dict[selectedLanguage].altLogo}
               className="h-8 w-8"
             />
             <span className="text-xl ml-2 mt-1 font-f2 text-light-text-primary dark:text-dark-text-primary">
@@ -65,32 +64,32 @@ const MobileSidebar: React.FC<{ isOpen: boolean; onClose: () => void }> = ({ isO
           <li onClick={() => handleLinkClick("home")} 
               className={`flex items-center space-x-2 p-2 cursor-pointer hover:bg-light-primary dark:hover:bg-dark-primary hover:text-dark-text-primary ${currentPage === "home" ? 'bg-gray-100 dark:bg-gray-700' : ''}`}>
               <FaHome className={`w-6 h-6 mr-2`} />
-            <span className="font-f2">Home</span>
+            <span className="font-f2">{dict[selectedLanguage].menuHome}</span>
           </li>
           <li onClick={() => handleLinkClick("authentication")} 
             className={`flex items-center space-x-2 p-2 cursor-pointer hover:bg-light-primary dark:hover:bg-dark-primary hover:text-dark-text-primary ${currentPage === "authentication" ? 'bg-gray-100 dark:bg-gray-700' : ''}`}>
            <FaUserShield className={`w-6 h-6 mr-2`} />
-           <span className="font-f2">Authentication</span>
+           <span className="font-f2">{dict[selectedLanguage].menuAuthentication}</span>
           </li>
           <li onClick={() => handleLinkClick("add-member")} 
               className={`flex items-center space-x-2 p-2 cursor-pointer hover:bg-light-primary dark:hover:bg-dark-primary hover:text-dark-text-primary ${currentPage === "add-member" ? 'bg-gray-100 dark:bg-gray-700' : ''}`}>
               <FaUserPlus className="w-6 h-6 mr-2" />
-            <span className="font-f2">Add Member</span>
+            <span className="font-f2">{dict[selectedLanguage].menuAddMember}</span>
           </li>
           <li onClick={() => handleLinkClick("members")} 
               className={`flex items-center space-x-2 p-2 cursor-pointer hover:bg-light-primary dark:hover:bg-dark-primary hover:text-dark-text-primary ${currentPage === "members" ? 'bg-gray-100 dark:bg-gray-700' : ''}`}>
               <FaPeopleGroup className="w-6 h-6 mr-2" />
-            <span className="font-f2">Members</span>
+            <span className="font-f2">{dict[selectedLanguage].menuMembers}</span>
           </li>
           <li onClick={() => handleLinkClick("dashboard")} 
               className={`flex items-center space-x-2 p-2 cursor-pointer hover:bg-light-primary dark:hover:bg-dark-primary hover:text-dark-text-primary ${currentPage === "dashboard" ? 'bg-gray-100 dark:bg-gray-700' : ''}`}>
               <FaTachometerAlt className="w-6 h-6 mr-2" />
-            <span className="font-f2">Dashboard</span>
+            <span className="font-f2">{dict[selectedLanguage].menuDashboard}</span>
           </li>
-        
         </ul>
       </div>
     </div>
-); };
+  );
+};
 
 export default MobileSidebar;

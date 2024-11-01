@@ -5,6 +5,11 @@ export interface User {
   isLoggedIn?: boolean;
   isEmailValidated?: boolean;
   logo?: string;
+  settings?: Settings;
+}
+
+export interface Settings {
+  language: string; 
 }
 
 export interface Member {
@@ -22,4 +27,18 @@ export interface Member {
   isSubscriptionActive: boolean;
   lastSubscriptionDate: Date;
   lastPaymentValue?: number;
+}
+
+export interface Notif {
+  id?: number;
+  title: string;
+  content?: string;
+  type?: "",
+  description?: string;
+  senderId?: number;
+  receiverId?: number;
+  parentId?: number;
+  createdAt?: Date;
+  isRead?: boolean;
+  icon?: string;
 }

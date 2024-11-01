@@ -12,6 +12,7 @@ import { ApolloProvider } from '@apollo/client';
 import client from './apollo/apolloClient';
 import { BrowserRouter } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
+import { LanguageProvider } from './context/LanguageContext';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
@@ -31,7 +32,9 @@ root.render(
           <BrowserRouter>
             <ApolloProvider client={client}>
               <ThemeProvider>
+              <LanguageProvider> 
                 <App />
+              </LanguageProvider>
               </ThemeProvider>
             </ApolloProvider>
           </BrowserRouter>

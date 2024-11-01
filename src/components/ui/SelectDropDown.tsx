@@ -12,6 +12,7 @@ interface CustomDropdownProps {
   onChange: (value: string) => void;
   className?: string;
   bgColor?: string;
+  borderColor?: string;
   placeholder?: string;
 }
 
@@ -21,6 +22,7 @@ const CustomDropdown: React.FC<CustomDropdownProps> = ({
   onChange,
   className,
   bgColor = 'bg-light-surface dark:bg-dark-surface',
+  borderColor = 'border-light-primary dark:border-dark-primary',
   placeholder,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -46,9 +48,10 @@ const CustomDropdown: React.FC<CustomDropdownProps> = ({
 
   return (
     <div ref={dropdownRef} className={`relative ${className}`}>
-      
       <div
-        className={`w-full rounded px-4 py-2 cursor-pointer border-none ${bgColor} text-light-text-primary dark:text-dark-text-primary border border-dark-text-secondary focus:outline-none focus:border-dark-primary flex justify-between items-center`}
+        className={`w-full rounded px-4 py-2 cursor-pointer ${
+          isOpen ? `border ${borderColor}` : ''
+        } ${bgColor} text-light-text-primary dark:text-dark-text-primary outline-none flex justify-between items-center`}
         onClick={() => setIsOpen(!isOpen)}
       >
         <span>
@@ -56,8 +59,12 @@ const CustomDropdown: React.FC<CustomDropdownProps> = ({
         </span>
         <ChevronDown className={`transform transition-transform ${isOpen ? 'rotate-180' : ''}`} size={16} />
       </div>
+
       {isOpen && (
-        <div className={`absolute z-20 w-full mt-1 ${bgColor} border border-dark-text-secondary rounded shadow-lg`} style={{ maxHeight: '200px', overflowY: 'auto' }}>
+        <div
+          className={`absolute z-20 w-full mt-1 ${bgColor} light-scrollbar dark:dark-scrollbar border ${borderColor} rounded shadow-lg`}
+          style={{ maxHeight: '200px', overflowY: 'auto' }}
+        >
           {options.map((option) => (
             <div
               key={option.value}

@@ -1,17 +1,19 @@
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/Cards';
 import { Users, Clock, DollarSign, UserPlus, Activity } from 'lucide-react';
-import { Member } from '@/lib/types';
+import { Member } from '../../lib/types';
 import MemberCardHori from './members/MemberCardHori';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import { dict } from "../../lib/dict"
+import { useLanguage } from '../../context/LanguageContext';
 
 const Home = () => {
-  // Example data
+  const selectedLanguage = useLanguage();
   const quickStats = [
-    { title: 'Active Members', value: '432', icon: Users },
-    { title: 'New Members Today', value: '12', icon: UserPlus },
-    { title: 'Revenue Today', value: '$2,320', icon: DollarSign },
-    { title: 'Check-ins', value: '145', icon: Clock }
+    { title: dict[selectedLanguage].activeMembers, value: '432', icon: Users },
+    { title: dict[selectedLanguage].newMembersToday, value: '12', icon: UserPlus },
+    { title: dict[selectedLanguage].revenueToday, value: '$2,320', icon: DollarSign },
+    { title: dict[selectedLanguage].checkIns, value: '145', icon: Clock },
   ];
 
   const newMembers: Member[] = [
@@ -184,7 +186,7 @@ const Home = () => {
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <UserPlus className="w-5 h-5" />
-              New Members
+              {dict[selectedLanguage].newMembers}
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">

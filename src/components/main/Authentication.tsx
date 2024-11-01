@@ -2,6 +2,8 @@ import React, { useEffect, useRef, useState } from 'react';
 import { Member } from '../../lib/types';
 import { MemberApi } from '../../lib/apiHelper';
 import gym_4 from "../../assets/images/gym_4.svg"
+import { dict } from '../../lib/dict';
+import { useLanguage } from '../../context/LanguageContext';
 
 interface Option {
   value: string;
@@ -17,7 +19,9 @@ interface Errors {
   subscriptionError: boolean;
 }
 
-const Home: React.FC = () => {
+
+const Authentication: React.FC = () => {
+  const selectedLanguage = useLanguage();
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const streamRef = useRef<MediaStream | null>(null);
@@ -42,7 +46,6 @@ const Home: React.FC = () => {
     subscriptionError: false,
   });
   
-  const selectedLanguage = 'english';
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const memberApi = new MemberApi;
 
@@ -242,36 +245,36 @@ const handleAddMember = async () => {
     <div className="flex flex-col h-screen overflow-hidden w-full p-2 bg-light-background dark:bg-dark-background transition-colors duration-300">
       {/* Video Section */}
       <div className="flex justify-center items-center w-full h-3/4 bg-light-background dark:bg-dark-background rounded-xl shadow-inner relative overflow-hidden group">
-      {cameraError ? (
-        <div className="flex items-center justify-center w-full h-full bg-gray-900 rounded-xl">
-          <p className="text-white text-center p-4">{cameraError}</p>
-        </div>
-      ) : !isCameraOn ? (
-        <div className="relative w-full h-full rounded-xl">
-          <div
-            className="absolute inset-0 bg-cover md:bg-center -mt-8 md:mt-0 bg-no-repeat opacity-60"
-            style={{ 
-              backgroundImage: `url(${gym_4})`, 
-              height: '130%'
-            }}
-          />
+        {cameraError ? (
+          <div className="flex items-center justify-center w-full h-full bg-gray-900 rounded-xl">
+            <p className="text-white text-center p-4">{dict[selectedLanguage].cameraError}</p>
+          </div>
+        ) : !isCameraOn ? (
+          <div className="relative w-full h-full rounded-xl">
+            <div
+              className="absolute inset-0 bg-cover md:bg-center -mt-8 md:mt-0 bg-no-repeat opacity-60"
+              style={{ 
+                backgroundImage: `url(${gym_4})`, 
+                height: '130%'
+              }}
+            />
+            <video
+              ref={videoRef}
+              className="w-full h-full object-top object-contain bg-black rounded-xl"
+              autoPlay
+              playsInline
+              muted
+            />
+          </div>
+        ) : (
           <video
             ref={videoRef}
-            className="w-full h-full object-top object-contain bg-black rounded-xl" // Changed to object-top
+            className="w-full h-full object-top object-contain bg-black rounded-xl opacity-90"
             autoPlay
             playsInline
             muted
           />
-        </div>
-      ) : (
-        <video
-          ref={videoRef}
-          className="w-full h-full object-top object-contain bg-black rounded-xl opacity-90" // Changed to object-top
-          autoPlay
-          playsInline
-          muted
-        />
-      )}
+        )}
         <canvas ref={canvasRef} className="hidden" />
         <div className="absolute inset-0 rounded-xl border-none pointer-events-none" />
   
@@ -284,7 +287,7 @@ const handleAddMember = async () => {
                   onClick={handleCapture}
                   className="px-6 py-2 text-dark-text-primary rounded-lg opacity-0 group-hover:opacity-100 transition duration-300 bg-light-primary dark:bg-dark-primary hover:bg-light-secondary dark:hover:bg-dark-secondary"
                 >
-                  Capture Image
+                  {dict[selectedLanguage].captureImage}
                 </button>
               )}
               <button
@@ -295,12 +298,12 @@ const handleAddMember = async () => {
                     : 'bg-light-primary dark:bg-dark-primary hover:bg-light-secondary dark:hover:bg-dark-secondary transition duration-300'
                 } text-white`}
               >
-                {isCameraOn ? 'Turn Off Camera' : 'Turn On Camera'}
+                {isCameraOn ? dict[selectedLanguage].turnOffCamera : dict[selectedLanguage].turnOnCamera}
               </button>
             </div>
             {isCameraOn && (
               <p className="text-white text-sm mt-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                Or press <span className="font-semibold">Ctrl+x</span> to capture image
+                {dict[selectedLanguage].shortcutInstruction}
               </p>
             )}
           </div>
@@ -309,9 +312,9 @@ const handleAddMember = async () => {
   
       {/* Result Section */}
       <div className="flex flex-col items-center justify-center w-full h-1/4 bg-light-surface dark:bg-dark-surface text-light-text-primary dark:text-dark-text-primary rounded-xl shadow-inner p-4 mt-2">
-        <h2 className="text-lg  mb-2">Recognition Results</h2>
+        <h2 className="text-lg mb-2">{dict[selectedLanguage].recognitionResults}</h2>
         <p>
-          {resultMessage || 'Results will appear here after capturing an image.'}
+          {resultMessage || dict[selectedLanguage].resultMessagePlaceholder}
         </p>
       </div>
   
@@ -321,11 +324,12 @@ const handleAddMember = async () => {
           onClick={toggleCamera}
           className={`px-4 py-2 rounded ${isCameraOn ? 'bg-red-500' : 'bg-green-500'} text-white`}
         >
-          {isCameraOn ? 'Turn Off Camera' : 'Turn On Camera'}
+          {isCameraOn ? dict[selectedLanguage].turnOffCamera : dict[selectedLanguage].turnOnCamera}
         </button>
       </div>
     </div>
   );
+  
 };
 
-export default Home;
+export default Authentication;

@@ -1,4 +1,7 @@
 import { themes } from './src/lib/themeConfig';
+import scrollbarPlugin from 'tailwind-scrollbar'
+import scrollbarHide from 'tailwind-scrollbar-hide'
+
 // Helper function to flatten theme colors
 const flattenThemeColors = (themes) => {
   const flattened = {};
@@ -21,10 +24,27 @@ const config = {
         f1: ['Gelasio', 'serif'],
         f2: ['Satisfy', 'serif'],
       },
+      scrollbar: {
+        // Customize scrollbar width and track/thumb colors
+        width: '12px', // Adjust scrollbar width
+        track: {
+          light: '#E0E0E0', // Light mode track color
+          dark: '#333333',  // Dark mode track color
+        },
+        thumb: {
+          light: '#a0a0a0', // Light mode thumb color
+          dark: '#555555',  // Dark mode thumb color
+          hover: '#808080', // Hover color for thumb
+        },
+      },
     },
   },
   plugins: [
-    require('tailwind-scrollbar-hide'),
+    scrollbarHide,
+    scrollbarPlugin({ 
+      nocompatible: true,
+      preferredStrategy: 'pseudoelements' 
+    }),
   ],
   darkMode: 'class',  
 };
