@@ -128,7 +128,7 @@ const InputSection: React.FC<InputSectionProps> = ({ onCreateMember, isProcessin
 
   return (
     <div
-      className={`flex flex-col lg:w-4/12 p-4 scrollbar-hide bg-light-surface dark:bg-dark-surface rounded-t-xl lg:rounded-l-xl shadow-lg space-y-4 lg:space-y-6 max-h-full overflow-auto`}
+      className={`flex flex-col lg:w-4/12 p-4 scrollbar-hide bg-light-surface dark:bg-dark-surface rounded-t-xl lg:rounded-l-xl shadow-lg space-y-4 lg:space-y-6 max-h-full`}
     >
       <div className="flex items-center justify-center space-x-2">
         <img src={logo} alt="GymPro Logo" className="h-8 w-8" />

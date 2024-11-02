@@ -115,7 +115,7 @@ const VideoSection: React.FC<VideoSectionProps> = ({
   }, []);
 
   return (
-    <div className="flex justify-center items-center lg:w-10/12 lg:mr-2 mb-2 h-full bg-light-background dark:bg-dark-background rounded-b-xl lg:rounded-r-xl shadow-inner relative max-h-[60%] lg:max-h-none overflow-hidden group">
+    <div className="flex h-full justify-center items-center lg:w-10/12 lg:mr-2 mb-2 bg-light-background dark:bg-dark-background rounded-b-xl lg:rounded-r-xl shadow-inner relative min-h-[400px] overflow-hidden group">
       {cameraError ? (
         <div className="flex items-center justify-center w-full h-full bg-gray-900 rounded-xl">
           <p className="text-white text-center p-4">{cameraError}</p>

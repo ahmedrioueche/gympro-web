@@ -47,7 +47,7 @@ const AddMember: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col lg:flex-row h-screen overflow-hidden w-full p-2 bg-light-background dark:bg-dark-background transition-colors duration-300">
+    <div className="flex flex-col lg:flex-row h-screen overflow-y-scroll scrollbar-hide w-full p-2 bg-light-background dark:bg-dark-background transition-colors duration-300">
       <VideoSection
         setCapturedImageUrl={imageUrl => setCapturedImageUrl(imageUrl)}
         setCapturedImage={image => setCapturedImage(image)}
