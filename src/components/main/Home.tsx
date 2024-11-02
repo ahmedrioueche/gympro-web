@@ -4,7 +4,7 @@ import { Users, Clock, DollarSign, UserPlus, Activity } from 'lucide-react';
 import { Member } from '../../lib/types';
 import MemberCardHori from './members/MemberCardHori';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
-import { dict } from "../../lib/dict"
+import { dict } from '../../lib/dict';
 import { useLanguage } from '../../context/LanguageContext';
 
 const Home = () => {
@@ -76,7 +76,8 @@ const Home = () => {
       isSubscriptionActive: true,
       lastSubscriptionDate: new Date(new Date().setDate(new Date().getDate() - 1)),
       lastPaymentValue: 120,
-    },{
+    },
+    {
       id: '1',
       name: 'Alex Johnson',
       age: '29',
@@ -116,23 +117,19 @@ const Home = () => {
     { time: '12:00', checkIns: 30, revenue: 600 },
     { time: '13:00', checkIns: 28, revenue: 560 },
     { time: '14:00', checkIns: 22, revenue: 440 },
-    { time: '15:00', checkIns: 32, revenue: 640 }
+    { time: '15:00', checkIns: 32, revenue: 640 },
   ];
 
   return (
-    <div className="flex flex-col h-screen p-2 py-4  md:p-6 overflow-y-auto scrollbar-hide bg-light-background dark:bg-dark-background text-light-text-primary dark:text-dark-text-primary space-y-6">
+    <div className="flex flex-col h-screen p-4  md:p-6 overflow-y-auto scrollbar-hide bg-light-background dark:bg-dark-background text-light-text-primary dark:text-dark-text-primary space-y-6">
       {/* Quick Stats Section */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         {quickStats.map((stat, index) => (
           <Card key={index} className="bg-light-surface dark:bg-dark-surface">
             <CardContent className="p-6 flex items-center justify-between">
               <div>
-                <p className="text-sm text-light-text-secondary dark:text-dark-text-secondary">
-                  {stat.title}
-                </p>
-                <h3 className="text-2xl font-bold text-light-text-primary dark:text-dark-text-primary">
-                  {stat.value}
-                </h3>
+                <p className="text-sm text-light-text-secondary dark:text-dark-text-secondary">{stat.title}</p>
+                <h3 className="text-2xl font-bold text-light-text-primary dark:text-dark-text-primary">{stat.value}</h3>
               </div>
               <stat.icon className="w-8 h-8 text-light-primary dark:text-dark-primary" />
             </CardContent>
@@ -159,19 +156,19 @@ const Home = () => {
                   <YAxis yAxisId="left" />
                   <YAxis yAxisId="right" orientation="right" />
                   <Tooltip />
-                  <Line 
+                  <Line
                     yAxisId="left"
-                    type="monotone" 
-                    dataKey="checkIns" 
-                    stroke="#2563eb" 
+                    type="monotone"
+                    dataKey="checkIns"
+                    stroke="#2563eb"
                     strokeWidth={2}
                     name="Check-ins"
                   />
-                  <Line 
+                  <Line
                     yAxisId="right"
-                    type="monotone" 
-                    dataKey="revenue" 
-                    stroke="#16a34a" 
+                    type="monotone"
+                    dataKey="revenue"
+                    stroke="#16a34a"
                     strokeWidth={2}
                     name="Revenue ($)"
                   />
@@ -190,11 +187,11 @@ const Home = () => {
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
-            {newMembers.map((member) => (
+            {newMembers.map(member => (
               <MemberCardHori key={member.id} member={member} />
             ))}
           </CardContent>
-        </Card>      
+        </Card>
       </div>
     </div>
   );

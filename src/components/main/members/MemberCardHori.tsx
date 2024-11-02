@@ -27,7 +27,7 @@ const MemberCardHori: React.FC<MemberCardHoriProps> = ({ member }) => {
   };
 
   return (
-    <div className="w-full px-2 overflow-hidden rounded-lg border border-gray-200 bg-light-surface dark:bg-dark-surface shadow-sm dark:border-gray-700">
+    <div className="w-full px-2 overflow-hidden rounded-lg border border-gray-200 bg-light-surface dark:bg-dark-surface dark:border-gray-700 shadow-sm hover:shadow-lg dark:hover:shadow-xl transiton duration-300">
       <div className="flex items-center h-20">
         {/* Icon Section */}
         <div className="w-1/6 flex justify-center">

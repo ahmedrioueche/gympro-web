@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Card, CardContent } from '../ui/Cards';
 import { User, LogOut, Mail, Crown, Save, X } from 'lucide-react';
-import gym_2 from "../../assets/images/gym_2.svg";
+import gym_2 from '../../assets/images/gym_2.svg';
 import { dict } from '../../lib/dict';
 import { useLanguage } from '../../context/LanguageContext';
 
@@ -25,7 +25,6 @@ const UserProfilePage = () => {
 
   const handleSave = () => {
     // Add your save logic here
-    alert(dict[selectedLanguage].profileUpdated);
     setIsEditing(false);
   };
 
@@ -33,9 +32,9 @@ const UserProfilePage = () => {
     <div className="relative min-h-screen w-full bg-light-background dark:bg-dark-background flex items-center justify-center p-6">
       {/* Background image with smooth opacity */}
       <div className="absolute inset-0 w-full h-full overflow-hidden">
-        <img 
-          src={gym_2} 
-          alt={dict[selectedLanguage].gymBackgroundAlt} 
+        <img
+          src={gym_2}
+          alt={dict[selectedLanguage].gymBackgroundAlt}
           className="w-full h-full object-cover opacity-20"
         />
       </div>
@@ -52,14 +51,13 @@ const UserProfilePage = () => {
                 <h1 className="text-2xl text-start font-bold text-gray-800 dark:text-white">
                   {isEditing ? dict[selectedLanguage].editProfile : dict[selectedLanguage].yourProfile}
                 </h1>
-                <p className="text-gray-600 dark:text-gray-300">
-                  {dict[selectedLanguage].manageProfile}
-                </p>
+                <p className="text-gray-600 dark:text-gray-300">{dict[selectedLanguage].manageProfile}</p>
               </div>
               <button
                 onClick={handleEditToggle}
                 className="ml-auto flex items-center gap-2 px-4 py-2 text-gray-600 dark:text-gray-300
-                         hover:bg-gray-100 dark:hover:bg-gray-800/50 rounded-lg transition-all duration-300">
+                         hover:bg-gray-100 dark:hover:bg-gray-800/50 rounded-lg transition-all duration-300"
+              >
                 {isEditing ? (
                   <>
                     <X className="w-5 h-5" />
@@ -141,7 +139,8 @@ const UserProfilePage = () => {
                   onClick={handleSave}
                   className="flex items-center gap-2 px-6 py-3 bg-gradient-to-br from-purple-500 to-blue-500
                            text-white rounded-xl hover:shadow-lg transform hover:-translate-y-0.5
-                           transition-all duration-300">
+                           transition-all duration-300"
+                >
                   <Save className="w-5 h-5" />
                   {dict[selectedLanguage].saveChanges}
                 </button>
@@ -151,7 +150,8 @@ const UserProfilePage = () => {
                 className="flex items-center gap-2 px-6 py-3
                           text-gray-600 dark:text-gray-300
                           hover:bg-gray-100 dark:hover:bg-gray-800/50
-                          rounded-xl transition-all duration-300">
+                          rounded-xl transition-all duration-300"
+              >
                 <LogOut className="w-5 h-5" />
                 {dict[selectedLanguage].logOut}
               </button>

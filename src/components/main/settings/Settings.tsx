@@ -83,10 +83,11 @@ const SettingsPage: React.FC = () => {
 
   const handleSave = async (section: any) => {
     console.log("section:", section);
+    handleCloseModal();
     console.log("selectedLanguage:", selectedLanguage);
     const updateData = { settings: {language: selectedLanguage}};
     const response = await apiUpdateUser(null, "adsrahmed@gmail.com", updateData);
-    console.log("response", response);
+    console.log("response", response);  
   };
 
   const languageOptions = [

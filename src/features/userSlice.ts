@@ -1,5 +1,5 @@
 // src/features/userSlice.ts
-import { User } from '@/lib/types';
+import { User } from '../lib/types';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 // Set initial state
@@ -14,17 +14,20 @@ const userSlice = createSlice({
   name: 'user',
   initialState,
   reducers: {
-    setUser: (state, action: PayloadAction<{ 
-      email: string; 
-      name: string | null; 
-      isLoggedIn: boolean 
-    }>) => {
+    setUser: (
+      state,
+      action: PayloadAction<{
+        email: string;
+        name: string | null;
+        isLoggedIn: boolean;
+      }>
+    ) => {
       const { email, name, isLoggedIn } = action.payload;
       state.email = email;
       state.name = name;
       state.isLoggedIn = isLoggedIn;
     },
-    clearUser: (state) => {
+    clearUser: state => {
       state.email = null;
       state.name = null;
       state.isLoggedIn = false;

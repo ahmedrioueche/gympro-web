@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from 'react';
 import {
   FaMoon,
   FaSun,
@@ -10,22 +10,22 @@ import {
   FaSignInAlt,
   FaUserPlus,
   FaSpinner,
-} from "react-icons/fa";
-import { useTheme } from "../../context/ThemeContext";
-import logo from "../../assets/icons/logo.png"; 
-import { dict } from "../../lib/dict";
-import { useNavigate } from "react-router-dom";
+} from 'react-icons/fa';
+import { useTheme } from '../../context/ThemeContext';
+import logo from '../../assets/icons/logo.png';
+import { dict } from '../../lib/dict';
+import { useNavigate } from 'react-router-dom';
 import { useLanguage } from '../../context/LanguageContext';
 
 const Navbar = () => {
   const selectedLanguage = useLanguage();
   const { currentTheme, setCurrentTheme } = useTheme();
-  const [activeLink, setActiveLink] = useState("home");
+  const [activeLink, setActiveLink] = useState('home');
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isLoginLoading, setIsLoginLoading] = useState(false);
   const [isSignupLoading, setIsSignupLoading] = useState(false);
   const dropdownRef = useRef<HTMLDivElement | null>(null);
-  const [isScrolled, setIsScrolled] = useState(false); 
+  const [isScrolled, setIsScrolled] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(false);
   const navigate = useNavigate();
 
@@ -34,41 +34,41 @@ const Navbar = () => {
     const section = document.getElementById(link);
     if (section) {
       section.scrollIntoView({
-        behavior: "smooth",
-        block: "start",
+        behavior: 'smooth',
+        block: 'start',
       });
     }
   };
 
   useEffect(() => {
-    setIsDarkMode(currentTheme === "dark");
-  }, [currentTheme])
+    setIsDarkMode(currentTheme === 'dark');
+  }, [currentTheme]);
 
   useEffect(() => {
-    const handleClickOutside = (event : any) => {
+    const handleClickOutside = (event: any) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
         setIsMenuOpen(false);
       }
     };
 
-    document.addEventListener("mousedown", handleClickOutside);
+    document.addEventListener('mousedown', handleClickOutside);
     return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener('mousedown', handleClickOutside);
     };
   }, []);
 
   const toggleMenu = () => {
-    setIsMenuOpen((prevOpen) => !prevOpen);
+    setIsMenuOpen(prevOpen => !prevOpen);
   };
 
   const handleLogin = () => {
     setIsLoginLoading(true);
-    navigate("/auth/login");
+    navigate('/auth/login');
   };
 
   const handleSignup = () => {
     setIsSignupLoading(true);
-    navigate("/auth/signup");
+    navigate('/auth/signup');
   };
 
   useEffect(() => {
@@ -80,20 +80,24 @@ const Navbar = () => {
       }
     };
 
-    window.addEventListener("scroll", handleScroll);
+    window.addEventListener('scroll', handleScroll);
     return () => {
-      window.removeEventListener("scroll", handleScroll);
+      window.removeEventListener('scroll', handleScroll);
     };
   }, []);
 
   return (
-    <nav className={`fixed z-50 top-0 left-0 w-full ${isScrolled? 'bg-light-background dark:bg-dark-background' : 'bg-opacity-60'}`}>
+    <nav
+      className={`fixed z-50 top-0 left-0 w-full ${isScrolled ? 'bg-light-background dark:bg-dark-background' : 'bg-opacity-60'}`}
+    >
       <div className="max-w-[2000px] w-full mx-auto py-4 px-4 md:px-6">
         <div className="mx-auto flex items-center justify-between font-f1">
           <div className="text-3xl font-bold">
             <a href="/" className="relative cursor-pointer flex flex-row items-center">
               <img src={logo} alt={dict[selectedLanguage].logoAlt} className="h-8" />
-              <span className={`text-xl ml-2 mt-1 font-f2 text-light-text-primary dark:text-dark-text-primary ${!isScrolled? 'text-white' : ''}`}>
+              <span
+                className={`text-xl ml-2 mt-1 font-f2 text-light-text-primary dark:text-dark-text-primary ${!isScrolled ? 'text-white' : ''}`}
+              >
                 {dict[selectedLanguage].logo}
               </span>
             </a>
@@ -101,8 +105,8 @@ const Navbar = () => {
 
           {/* Large screens navigation */}
           <ul className="hidden md:flex space-x-6 flex-1 justify-center">
-            {["Home", "Features", "Contact"].map((item, index) => {
-              const sectionId = item.toLowerCase().replace(/\s+/g, "-");
+            {['Home', 'Features', 'Contact'].map((item, index) => {
+              const sectionId = item.toLowerCase().replace(/\s+/g, '-');
               return (
                 <li key={index}>
                   <a
@@ -113,15 +117,15 @@ const Navbar = () => {
                     <span
                       className={`relative transition-colors duration-300 ${
                         activeLink === sectionId
-                          ? `${!isScrolled? 'text-white' : 'text-light-text-primary dark:text-dark-text-primary'} `
-                          : `${!isScrolled? 'text-dark-text-secondary' : 'text-light-text-secondary dark:text-dark-text-secondary group-hover:text-light-text-primary dark:group-hover:text-dark-text-primary' }`
+                          ? `${!isScrolled ? 'text-white' : 'text-light-text-primary dark:text-dark-text-primary'} `
+                          : `${!isScrolled ? 'text-dark-text-secondary' : 'text-light-text-secondary dark:text-dark-text-secondary group-hover:text-light-text-primary dark:group-hover:text-dark-text-primary'}`
                       }`}
                     >
                       {dict[selectedLanguage][item.toLowerCase()]}
                     </span>
                     <span
                       className={`block h-[2px] w-0 bg-light-primary dark:bg-dark-primary absolute left-0 bottom-[-2px] transition-all duration-300 ${
-                        activeLink === sectionId ? "w-full" : "group-hover:w-full"
+                        activeLink === sectionId ? 'w-full' : 'group-hover:w-full'
                       }`}
                     ></span>
                   </a>
@@ -144,15 +148,19 @@ const Navbar = () => {
               {isSignupLoading ? <FaSpinner className="animate-spin" /> : dict[selectedLanguage].signup}
             </button>
             <button
-              onClick={() => setCurrentTheme(isDarkMode? 'light' : 'dark')}
-              className={`p-2 rounded-md ${!isScrolled? 'text-white' : ''} text-light-text-primary dark:text-dark-text-primary hover:bg-light-secondary dark:hover:bg-dark-secondary hover:text-white transition-colors duration-300`}
+              onClick={() => setCurrentTheme(isDarkMode ? 'light' : 'dark')}
+              className={`p-2 rounded-md ${!isScrolled ? 'text-white' : ''} text-light-text-primary dark:text-dark-text-primary hover:bg-light-secondary dark:hover:bg-dark-secondary hover:text-white transition-colors duration-300`}
             >
-              {isDarkMode ? <FaSun size={20} title={dict[selectedLanguage].darkModeOn} /> : <FaMoon size={20} title={dict[selectedLanguage].darkModeOff} />}
+              {isDarkMode ? (
+                <FaSun size={20} title={dict[selectedLanguage].darkModeOn} />
+              ) : (
+                <FaMoon size={20} title={dict[selectedLanguage].darkModeOff} />
+              )}
             </button>
             {/* Mobile Menu Icon */}
             <button
               onClick={toggleMenu}
-              className={`md:hidden p-2 rounded-md ${!isScrolled? 'text-white' : ''} text-light-text-primary dark:text-dark-text-primary hover:bg-light-secondary dark:hover:bg-dark-secondary transition-colors duration-300`}
+              className={`md:hidden p-2 rounded-md ${!isScrolled ? 'text-white' : ''} text-light-text-primary dark:text-dark-text-primary hover:bg-light-secondary dark:hover:bg-dark-secondary transition-colors duration-300`}
             >
               {isMenuOpen ? <FaTimes size={20} /> : <FaBars size={20} />}
             </button>
@@ -162,7 +170,7 @@ const Navbar = () => {
         {/* Mobile Menu */}
         {isMenuOpen && (
           <div
-            className="md:hidden overflow-y-auto mt-5 z-50 absolute top-[2.8rem] right-[1.4rem] w-[15.6rem] bg-light-background dark:bg-dark-background border border-transparent dark:border-gray-600 rounded-lg shadow-lg flex flex-col p-2 space-y-4"
+            className="md:hidden overflow-y-auto mt-5 z-50 absolute top-[2.8rem] right-[1.4rem] w-[15.6rem] bg-light-surface dark:bg-dark-surface border border-transparent dark:border-gray-600 rounded-lg shadow-lg flex flex-col p-2 space-y-4"
             ref={dropdownRef}
           >
             {Object.entries(dict[selectedLanguage].mobileMenu).map(([key, value], index) => (
@@ -175,10 +183,10 @@ const Navbar = () => {
                   setIsMenuOpen(false);
                 }}
               >
-                {key === "home" && <FaHome className="mr-3 text-lg" />}
-                {key === "features" && <FaAppStore className="mr-3 text-lg" />}
-                {key === "contact" && <FaPhone className="mr-3 text-lg" />}
-                {typeof value === "string" ? value : "Menu"} {/* Cast value to string */}
+                {key === 'home' && <FaHome className="mr-3 text-lg" />}
+                {key === 'features' && <FaAppStore className="mr-3 text-lg" />}
+                {key === 'contact' && <FaPhone className="mr-3 text-lg" />}
+                {typeof value === 'string' ? value : 'Menu'} {/* Cast value to string */}
               </a>
             ))}
 

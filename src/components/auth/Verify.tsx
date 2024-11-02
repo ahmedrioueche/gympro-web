@@ -80,9 +80,7 @@ function Verify() {
         setIsLoading(true);
         setResult({status: '', message: ''});
         if(sentVerificationCode === userVerificationCode) {
-          const userLanguage = navigator.language
-          const languageCode = userLanguage.split('-')[0];
-          const updateData = { isEmailValidated: true, language: languageCode};
+          const updateData = { isEmailValidated: true};
           const response = await apiUpdateUser(null, user?.email, updateData);
           console.log("response", response);
           navigate('/auth/Details'); 

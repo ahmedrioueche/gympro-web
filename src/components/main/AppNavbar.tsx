@@ -1,26 +1,20 @@
-import { lazy, Suspense, useEffect, useState } from "react";
-import {
-  FaMoon,
-  FaSun,
-  FaBell,
-  FaUserCircle,
-  FaBars,
-  FaClock,
-  FaArrowUp,
-} from "react-icons/fa";
-import { useTheme } from "../../context/ThemeContext"; 
-import { dict } from "../../lib/dict"; 
-import MobileSidebar from "./MobileSidebar"; 
-import logo from "../../assets/icons/logo.png";
-import DropdownProfile from "./DropdownProfile";
-import gym_guys from "../../assets/animations/gym_guys.json";
-import gym_guy_blue from "../../assets/animations/gym_guy_blue.json";
-import ChatbotDropdown from "./ChatBot";
+import { lazy, Suspense, useEffect, useState } from 'react';
+import { FaMoon, FaSun, FaBell, FaUserCircle, FaBars, FaClock, FaArrowUp } from 'react-icons/fa';
+import { useTheme } from '../../context/ThemeContext';
+import { dict } from '../../lib/dict';
+import MobileSidebar from './MobileSidebar';
+import logo from '../../assets/icons/logo.png';
+import DropdownProfile from './DropdownProfile';
+import gym_guys from '../../assets/animations/gym_guys.json';
+import gym_guy_blue from '../../assets/animations/gym_guy_blue.json';
+import runner from '../../assets/animations/runner.json';
+import ChatbotDropdown from './ChatBot';
 import { Bot } from 'lucide-react';
-import PlansDropDown from "./PlansDropDown";
-import DropdownNotifs from "./DropdownNotifs";
-import { useNavigate } from "react-router-dom";
+import PlansDropDown from './PlansDropDown';
+import DropdownNotifs from './DropdownNotifs';
+import { useNavigate } from 'react-router-dom';
 import { useLanguage } from '../../context/LanguageContext';
+import { getRandomNumber } from '../../lib/helper';
 
 const LottieAnimation = lazy(() => import('../ui/LottieAnimation'));
 
@@ -28,18 +22,22 @@ const AppNavbar = () => {
   const selectedLanguage = useLanguage();
   const { currentTheme, setCurrentTheme } = useTheme();
   const [isDarkMode, setIsDarkMode] = useState(false);
-  const [searchQuery, setSearchQuery] = useState("");
-  const [activeDropdown, setActiveDropdown] = useState<string | null>(null); 
+  const [searchQuery, setSearchQuery] = useState('');
+  const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
   const [isChatbotOpen, setIsChatbotOpen] = useState(false);
   const [isTrialDropDownOpen, setIsTrialDropDownOpen] = useState(false);
   const [isNotifsDropDownOpen, setIsNotifsDropDownOpen] = useState(false);
   const [isMidSizedScreen, setIsMidSizedScreen] = useState(false);
+  const [isSmallScreen, setIsSmallScreen] = useState(false);
+  const [randomAnimationIndex, setRandomAnimationIndex] = useState(1);
+  const animationsNum = 3;
   const navigate = useNavigate();
-  
+
   useEffect(() => {
     const handleResize = () => {
-      setIsMidSizedScreen((window.innerWidth < 1100 && window.innerWidth > 768));
+      setIsMidSizedScreen(window.innerWidth < 1100 && window.innerWidth > 768);
+      setIsSmallScreen(window.innerWidth < 768);
     };
 
     // Set initial state and add event listener
@@ -52,12 +50,12 @@ const AppNavbar = () => {
   }, [window.innerWidth]);
 
   useEffect(() => {
-    setIsDarkMode(currentTheme === "dark");
+    setIsDarkMode(currentTheme === 'dark');
   }, [currentTheme]);
 
   const handleSearch = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log("Search:", searchQuery);
+    console.log('Search:', searchQuery);
   };
 
   const toggleDropdown = (dropdown: string) => {
@@ -65,8 +63,8 @@ const AppNavbar = () => {
   };
 
   const handleSettings = () => {
-    toggleDropdown("settings");
-    console.log("Navigating to settings...");
+    toggleDropdown('settings');
+    console.log('Navigating to settings...');
   };
 
   const openMobileSidebar = () => {
@@ -75,25 +73,28 @@ const AppNavbar = () => {
 
   const user = {
     settings: {
-      renderAnimations: false,
-    }
+      renderAnimations: true,
+    },
   };
+
+  useEffect(() => {
+    setRandomAnimationIndex(getRandomNumber(1, animationsNum));
+  }, []);
 
   return (
     <nav className="relative z-10 top-0 left-0 w-full shadow-md bg-light-surface dark:bg-dark-surface">
       <div className="max-w-[2000px] w-full mx-auto py-4 px-4 md:px-6">
         <div className="flex items-center justify-between font-f1 relative">
           <div className="flex justify-start">
-            <div onClick={openMobileSidebar} className="md:hidden text-light-primary dark:text-dark-primary cursor-pointer">
+            <div
+              onClick={openMobileSidebar}
+              className="md:hidden text-light-primary dark:text-dark-primary cursor-pointer"
+            >
               <FaBars className="mt-1 mr-4" size={24} />
             </div>
             <div className="flex items-center space-x-3">
               <a href="/main/home" className="relative cursor-pointer flex items-center">
-                <img
-                  src={logo}
-                  alt="GymPro Logo"
-                  className="h-8 w-8"
-                />
+                <img src={logo} alt="GymPro Logo" className="h-8 w-8" />
                 <span className="text-xl ml-2 mt-1 font-f2 text-light-text-primary dark:text-dark-text-primary">
                   {dict[selectedLanguage].logo}
                 </span>
@@ -109,19 +110,38 @@ const AppNavbar = () => {
                 <FaArrowUp className="text-xl hidden group-hover:block" />
               </span>
             </button>
-            <PlansDropDown 
-              isOpen={isTrialDropDownOpen} 
-              onClose={() => setIsTrialDropDownOpen(false)}
-            />
-            {!isMidSizedScreen && user.settings.renderAnimations && (
+            <PlansDropDown isOpen={isTrialDropDownOpen} onClose={() => setIsTrialDropDownOpen(false)} />
+            {!isSmallScreen && !isMidSizedScreen && user.settings.renderAnimations && randomAnimationIndex === 1 && (
               <Suspense fallback={null}>
-                <LottieAnimation animationData={gym_guy_blue} className="hidden md:block absolute -mt-4 ml-12 h-16 w-20" />
+                <LottieAnimation
+                  animationData={gym_guy_blue}
+                  className="hidden md:block absolute -mt-4 ml-12 h-16 w-20"
+                />
+              </Suspense>
+            )}
+            {!isSmallScreen && (isMidSizedScreen || randomAnimationIndex === 2) && user.settings.renderAnimations && (
+              <Suspense fallback={null}>
+                <LottieAnimation
+                  animationData={runner}
+                  className={`
+                  z-10 md:-z-10
+                  pt-2
+                  absolute 
+                  h-14 w-20 
+                  transition-transform duration-300
+                  left-[42%]
+                  bottom-0
+                  pointer-events-none
+                  [animation:run_12s_linear_infinite]
+                  [transform-style:preserve-3d]
+                `}
+                />
               </Suspense>
             )}
           </div>
 
           <div className="relative flex items-center space-x-6">
-            {!isMidSizedScreen && user.settings.renderAnimations && (
+            {user.settings.renderAnimations && (isSmallScreen || randomAnimationIndex === 3) && (
               <Suspense fallback={null}>
                 <LottieAnimation animationData={gym_guys} className="absolute -mt-10 md:-ml-28 -ml-16 h-20 w-20" />
               </Suspense>
@@ -134,13 +154,13 @@ const AppNavbar = () => {
               {dict[selectedLanguage].chatbot}
               <span className={`transition-transform duration-300 group-hover:rotate-180`}></span>
             </button>
-          
-            <ChatbotDropdown 
-              isOpen={isChatbotOpen} 
-              onClose={() => setIsChatbotOpen(false)} 
-            />
 
-            <div onClick={() => navigate('/main/feedback')} className="hidden md:block text-base dark:text-dark-text-secondary text-light-text-secondary hover:cursor-pointer transition duration-300 px-4 py-2 rounded-lg border border-transparent hover:border-light-text-primary hover:text-light-text-primary dark:hover:text-dark-text-primary dark:hover:border-dark-text-primary">
+            <ChatbotDropdown isOpen={isChatbotOpen} onClose={() => setIsChatbotOpen(false)} />
+
+            <div
+              onClick={() => navigate('/main/feedback')}
+              className="hidden md:block text-base dark:text-dark-text-secondary text-light-text-secondary hover:cursor-pointer transition duration-300 px-4 py-2 rounded-lg border border-transparent hover:border-light-text-primary hover:text-light-text-primary dark:hover:text-dark-text-primary dark:hover:border-dark-text-primary"
+            >
               {dict[selectedLanguage].feedback}
             </div>
 
@@ -164,33 +184,28 @@ const AppNavbar = () => {
 
             <div className="relative">
               <button
-                onClick={() => toggleDropdown("profile")}
+                onClick={() => toggleDropdown('profile')}
                 className="inline-block p-2 rounded-md bg-light-surface dark:bg-dark-surface text-light-text-primary dark:text-dark-text-primary hover:text-dark-text-primary hover:bg-light-primary dark:hover:bg-dark-primary transition-colors duration-300"
               >
                 <FaUserCircle size={20} />
               </button>
-              
+
               <div className="absolute right-0">
                 <DropdownProfile
-                  isOpen={activeDropdown === "profile"}
-                  onClose={() => toggleDropdown("profile")}
+                  isOpen={activeDropdown === 'profile'}
+                  onClose={() => toggleDropdown('profile')}
                   onOpenChatBotDropDown={() => setIsChatbotOpen(true)}
                   onOpenPlansDropDown={() => setIsTrialDropDownOpen(true)}
-                />  
+                  onOpenNotifDropdown={() => setIsNotifsDropDownOpen(true)}
+                />
               </div>
             </div>
           </div>
         </div>
       </div>
-      <DropdownNotifs 
-        isOpen={isNotifsDropDownOpen} 
-        onClose={() => setIsNotifsDropDownOpen(false)}
-      />
-         
-      <MobileSidebar 
-        isOpen={isMobileSidebarOpen}
-        onClose={() => setIsMobileSidebarOpen(false)}  
-      />
+      <DropdownNotifs isOpen={isNotifsDropDownOpen} onClose={() => setIsNotifsDropDownOpen(false)} />
+
+      <MobileSidebar isOpen={isMobileSidebarOpen} onClose={() => setIsMobileSidebarOpen(false)} />
     </nav>
   );
 };

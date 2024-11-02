@@ -7,8 +7,8 @@ import AppFooter from './AppFooter';
 
 // Lazy load components
 const Home = React.lazy(() => import('./Home'));
-const Authentication = React.lazy(() => import('./Authentication'));
-const AddUser = React.lazy(() => import('./AddUser'));
+const Authentication = React.lazy(() => import('./facialRec/Authentication'));
+const AddUser = React.lazy(() => import('./facialRec/AddMember'));
 const Members = React.lazy(() => import('./members/Members'));
 const MemberProfile = React.lazy(() => import('./members/MemberProfile'));
 const GymDashboard = React.lazy(() => import('./dashboard/Dashboard'));
@@ -23,12 +23,12 @@ const Main = () => {
     <div className="flex flex-col min-h-screen scrollbar-hide">
       {/* Navbar at the top */}
       <AppNavbar />
-      
+
       {/* Main content container */}
       <div className="flex flex-1 overflow-hidden h-full">
         {/* SideMenu with fixed width and full height */}
         <SideMenu />
-        
+
         {/* Render nested routes */}
         <main className="flex-1 overflow-y-auto overflow-x-hidden bg-light-background dark:bg-dark-background">
           <Suspense fallback={<SkeletonHome />}>

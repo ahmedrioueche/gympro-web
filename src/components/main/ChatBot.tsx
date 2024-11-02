@@ -15,14 +15,14 @@ const ChatbotDropdown: React.FC<{
 }> = ({ isOpen, onClose }) => {
   const selectedLanguage = useLanguage();
   const [messages, setMessages] = useState<Message[]>([
-    { id: 1, text: dict[selectedLanguage].assistantGreeting, isBot: true }
+    { id: 1, text: dict[selectedLanguage].assistantGreeting, isBot: true },
   ]);
   const [inputMessage, setInputMessage] = useState('');
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
 
   useEffect(() => {
@@ -33,18 +33,23 @@ const ChatbotDropdown: React.FC<{
     e.preventDefault();
     if (!inputMessage.trim()) return;
 
+    // Add user's message to the chat
     setMessages(prev => [...prev, { id: Date.now(), text: inputMessage, isBot: false }]);
     setInputMessage('');
 
-    // Simulate bot response
+    // Simulate bot response with a random message from chatbotReplies
     setTimeout(() => {
+      const replies = dict[selectedLanguage].chatbotReplies;
+      const randomKey = Object.keys(replies)[Math.floor(Math.random() * Object.keys(replies).length)];
+      const randomReply = replies[randomKey];
+
       setMessages(prev => [
         ...prev,
         {
           id: Date.now() + 1,
-          text: dict[selectedLanguage].botResponse,
-          isBot: true
-        }
+          text: randomReply,
+          isBot: true,
+        },
       ]);
     }, 1000);
   };
@@ -69,10 +74,8 @@ const ChatbotDropdown: React.FC<{
   return (
     <div
       ref={dropdownRef}
-      className={`absolute right-0 top-16 w-80 md:w-96 z-100 bg-light-surface dark:bg-dark-surface rounded-lg shadow-xl transform transition-all duration-300 ease-out origin-top ${
-        isOpen 
-          ? 'opacity-100 scale-y-100 translate-y-0' 
-          : 'opacity-0 scale-y-0 -translate-y-4 pointer-events-none'
+      className={`absolute light-scrollbar dark:dark-scrollbar right-0 top-16 w-80 md:w-96 z-100 bg-light-surface dark:bg-dark-surface rounded-lg shadow-xl transform transition-all duration-300 ease-out origin-top ${
+        isOpen ? 'opacity-100 scale-y-100 translate-y-0' : 'opacity-0 scale-y-0 -translate-y-4 pointer-events-none'
       }`}
     >
       {/* Header */}
@@ -81,7 +84,7 @@ const ChatbotDropdown: React.FC<{
           <Bot className="w-5 h-5 text-blue-500" />
           <h2 className="text-base font-semibold dark:text-white">{dict[selectedLanguage].botTitle}</h2>
         </div>
-        <button 
+        <button
           onClick={onClose}
           className="p-1 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full transition-colors duration-200"
         >
@@ -91,13 +94,10 @@ const ChatbotDropdown: React.FC<{
 
       {/* Messages Container */}
       <div className="h-80 overflow-y-auto p-3 space-y-3">
-        {messages.map((message) => (
-          <div
-            key={message.id}
-            className={`flex ${message.isBot ? 'justify-start' : 'justify-end'}`}
-          >
+        {messages.map(message => (
+          <div key={message.id} className={`flex ${message.isBot ? 'justify-start' : 'justify-end'}`}>
             <div
-              className={`max-w-[80%] rounded-lg p-2 text-sm ${
+              className={`max-w-[80%] rounded-lg p-2 text-sm text-start ${
                 message.isBot
                   ? 'bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200'
                   : 'bg-blue-500 text-white'

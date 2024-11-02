@@ -1,4 +1,6 @@
 import CustomDropdown from '../../ui/SelectDropDown';
+import CustomInput from '../../ui/CustomInput';
+import CustomButton from '../../ui/CustomButton';
 import { Member } from '../../../lib/types';
 import React, { useState } from 'react';
 import { FaTimes, FaEdit } from 'react-icons/fa';
@@ -22,14 +24,14 @@ const EditMemberModal: React.FC<EditMemberModalProps> = ({ member, isOpen, onClo
   ];
 
   const handleSubmit = () => {
-    console.log("Updating member:", formData);
+    console.log('Updating member:', formData);
     onClose();
   };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  const handleChange = (key: keyof Member, value: string | undefined) => {
     setFormData(prev => ({
       ...prev,
-      [e.target.name]: e.target.value
+      [key]: value,
     }));
   };
 
@@ -63,32 +65,29 @@ const EditMemberModal: React.FC<EditMemberModalProps> = ({ member, isOpen, onClo
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
               <label className="text-sm font-medium">{dict[selectedLanguage].labelName}</label>
-              <input
+              <CustomInput
                 type="text"
-                name="name"
-                value={formData.name || ''}
-                onChange={handleChange}
-                className="w-full p-2 rounded-lg bg-gray-100 dark:bg-gray-700 outline-none focus:ring-1 focus:ring-light-primary dark:focus:ring-dark-primary border border-gray-300 dark:border-gray-600"
+                placeholder={dict[selectedLanguage].labelName}
+                value={formData.name}
+                onChange={value => handleChange('name', value)}
               />
             </div>
             <div className="space-y-2">
               <label className="text-sm font-medium">{dict[selectedLanguage].labelEmail}</label>
-              <input
+              <CustomInput
                 type="email"
-                name="email"
-                value={formData.email || ''}
-                onChange={handleChange}
-                className="w-full p-2 rounded-lg bg-gray-100 dark:bg-gray-700 outline-none focus:ring-1 focus:ring-light-primary dark:focus:ring-dark-primary border border-gray-300 dark:border-gray-600"
+                placeholder={dict[selectedLanguage].labelEmail}
+                value={formData.email}
+                onChange={value => handleChange('email', value)}
               />
             </div>
             <div className="space-y-2">
               <label className="text-sm font-medium">{dict[selectedLanguage].labelPhone}</label>
-              <input
+              <CustomInput
                 type="tel"
-                name="phone"
-                value={formData.phone || ''}
-                onChange={handleChange}
-                className="w-full p-2 rounded-lg bg-gray-100 dark:bg-gray-700 outline-none focus:ring-1 focus:ring-light-primary dark:focus:ring-dark-primary border border-gray-300 dark:border-gray-600"
+                placeholder={dict[selectedLanguage].labelPhone}
+                value={formData.phone}
+                onChange={value => handleChange('phone', value)}
               />
             </div>
             <div className="space-y-2">
@@ -98,8 +97,9 @@ const EditMemberModal: React.FC<EditMemberModalProps> = ({ member, isOpen, onClo
                 value={subscriptionType}
                 onChange={setSubscriptionType}
                 placeholder={dict[selectedLanguage].placeholderSubscriptionType}
-                className={`border border-gray-300 dark:border-gray-600  rounded-md`}
-                bgColor='bg-gray-100 dark:bg-gray-700'
+                className="border border-gray-300 dark:border-gray-600 rounded-md"
+                bgColor="bg-gray-100 dark:bg-gray-700"
+                borderColor="bg-white"
               />
             </div>
           </div>
@@ -107,18 +107,18 @@ const EditMemberModal: React.FC<EditMemberModalProps> = ({ member, isOpen, onClo
 
         {/* Action Buttons */}
         <div className="flex justify-between space-x-4 mt-10">
-          <button
+          <CustomButton
             onClick={onClose}
-            className="flex-1 px-4 py-2 max-w-40 text-base font-semibold bg-light-primary dark:bg-dark-primary rounded-lg hover:bg-light-accentPrimary dark:hover:bg-dark-accentPrimary text-dark-text-primary transition duration-200"
-          >
-            {dict[selectedLanguage].buttonCancel}
-          </button>
-          <button
+            text={dict[selectedLanguage].buttonCancel}
+            type="primary"
+            className="flex-1 max-w-40"
+          />
+          <CustomButton
             onClick={handleSubmit}
-            className="flex-1 px-4 py-2 max-w-40 text-base font-semibold text-white bg-red-500 rounded-lg hover:bg-red-600 transition-colors duration-200"
-          >
-            {dict[selectedLanguage].buttonSave}
-          </button>
+            text={dict[selectedLanguage].buttonSave}
+            type="secondary"
+            className="flex-1 max-w-40"
+          />
         </div>
       </div>
     </div>

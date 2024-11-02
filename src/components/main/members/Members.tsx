@@ -1,14 +1,13 @@
-import { Member } from '@/lib/types';
+import { Member } from '../../../lib/types';
 import React, { useState, useMemo } from 'react';
 import { Search } from 'lucide-react';
 import MemberCard from './MemberCard';
 import CustomDropdown from '../../ui/SelectDropDown';
 import EditMemberModal from '../modals/EditMemberModal';
 import DeleteMemberModal from '../modals/DeleteMemberModal';
-import gym_2 from "../../../assets/images/gym_2.svg";
+import gym_2 from '../../../assets/images/gym_2.svg';
 import { dict } from '../../../lib/dict';
 import { useLanguage } from '../../../context/LanguageContext';
-
 
 const initialMembers: Member[] = [
   {
@@ -68,19 +67,21 @@ const Members: React.FC = () => {
   const filteredMembers = useMemo(() => {
     return initialMembers
       .filter(member => {
-        const matchesSearch = member.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                              (member.email && member.email.toLowerCase().includes(searchQuery.toLowerCase()));
-        const matchesStatus = statusFilter === 'all' || 
-                              (statusFilter === 'active' && member.isSubscriptionActive) || 
-                              (statusFilter === 'inactive' && !member.isSubscriptionActive);
+        const matchesSearch =
+          member.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          (member.email && member.email.toLowerCase().includes(searchQuery.toLowerCase()));
+        const matchesStatus =
+          statusFilter === 'all' ||
+          (statusFilter === 'active' && member.isSubscriptionActive) ||
+          (statusFilter === 'inactive' && !member.isSubscriptionActive);
         const matchesMembership = membershipFilter === 'all' || member.subscriptionType === membershipFilter;
-        
+
         return matchesSearch && matchesStatus && matchesMembership;
       })
       .sort((a, b) => {
-        return sortBy === 'name' ? 
-          a.name.localeCompare(b.name) : 
-          new Date(b.joinDate).getTime() - new Date(a.joinDate).getTime();
+        return sortBy === 'name'
+          ? a.name.localeCompare(b.name)
+          : new Date(b.joinDate).getTime() - new Date(a.joinDate).getTime();
       });
   }, [searchQuery, statusFilter, membershipFilter, sortBy]);
 
@@ -109,7 +110,7 @@ const Members: React.FC = () => {
               type="text"
               placeholder={dict[selectedLanguage].searchPlaceholder}
               value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
+              onChange={e => setSearchQuery(e.target.value)}
               className="w-full rounded-lg bg-light-surface dark:bg-dark-surface px-4 py-3 pl-10 text-sm border-none focus:ring-1 focus:ring-dark-primary outline-none dark:text-dark-text-primary"
             />
             <Search className="absolute left-3 top-2.5 h-4 w-4 mt-0.5 text-light-text-secondary dark:text-dark-text-secondary" />
@@ -150,13 +151,8 @@ const Members: React.FC = () => {
       {/* Member Cards Grid */}
       <div className="relative z-10 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {filteredMembers.length > 0 ? (
-          filteredMembers.map((member) => (
-            <MemberCard
-              key={member.id}
-              member={member}
-              onEdit={handleEdit}
-              onDelete={handleDelete}
-            />
+          filteredMembers.map(member => (
+            <MemberCard key={member.id} member={member} onEdit={handleEdit} onDelete={handleDelete} />
           ))
         ) : (
           <div className="col-span-full py-8 text-center text-light-text-secondary dark:text-dark-text-secondary">
@@ -166,16 +162,8 @@ const Members: React.FC = () => {
       </div>
 
       {/* Modals */}
-      <EditMemberModal
-        member={memberToEdit}
-        isOpen={isEditOpen}
-        onClose={() => setIsEditOpen(false)}
-      />
-      <DeleteMemberModal
-        memberId={memberToDeleteId}
-        isOpen={isDeleteOpen}
-        onClose={() => setIsDeleteOpen(false)}
-      />
+      <EditMemberModal member={memberToEdit} isOpen={isEditOpen} onClose={() => setIsEditOpen(false)} />
+      <DeleteMemberModal memberId={memberToDeleteId} isOpen={isDeleteOpen} onClose={() => setIsDeleteOpen(false)} />
     </div>
   );
 };
