@@ -5,6 +5,9 @@ import { useLanguage } from '../../../context/LanguageContext';
 import ahmedImage from '../../../assets/images/ahmedDrioueche.jpg';
 import { Maximize2, Minimize2, Camera, CameraOff } from 'lucide-react';
 import CustomButton from '../../ui/CustomButton';
+import * as tf from '@tensorflow/tfjs';
+import * as blazeface from '@tensorflow-models/blazeface';
+import * as mobilenet from '@tensorflow-models/mobilenet';
 
 const Authentication: React.FC = () => {
   const selectedLanguage = useLanguage();
@@ -21,49 +24,15 @@ const Authentication: React.FC = () => {
   const [showControls, setShowControls] = useState<boolean>(false);
   const [showResults, setShowResults] = useState<boolean>(false);
   const [isModelLoaded, setIsModelLoaded] = useState<boolean>(false);
-  const [referenceDescriptor, setReferenceDescriptor] = useState<Float32Array | null>(null);
+  const modelRef = useRef<blazeface.BlazeFaceModel | null>(null);
+  const animationFrameRef = useRef<number>();
+  const isDetectingRef = useRef<boolean>(false);
+  const [matchScore, setMatchScore] = useState<number>(0);
+  const mobileNetRef = useRef<mobilenet.MobileNet | null>(null);
+  const referenceEmbeddingRef = useRef<tf.Tensor | null>(null);
+  const matchThreshold = 0.6;
 
-  // Load face-api models
-  //useEffect(() => {
-  //const loadModels = async () => {
-  //  try {
-  //    await tf.setBackend('cpu');
-  //    await tf.ready();
-  //    console.log('🚀 Starting to load face detection models...');
-  //    await Promise.all([
-  //      faceapi.nets.faceRecognitionNet.loadFromUri('/models'),
-  //      faceapi.nets.faceLandmark68Net.loadFromUri('/models'),
-  //      faceapi.nets.ssdMobilenetv1.loadFromUri('/models'),
-  //      faceapi.nets.faceExpressionNet.loadFromUri('/models'),
-  //    ]);
-  //    setIsModelLoaded(true);
-  //    console.log('✅ Face detection models loaded successfully');
-  //
-  //    // // Load and process reference image
-  //    // try {
-  //    //   console.log('📸 Loading reference image...');
-  //    //   const img = await faceapi.fetchImage(ahmedImage);
-  //    //   const detection = await faceapi.detectSingleFace(img).withFaceLandmarks().withFaceDescriptor();
-  //    //
-  //    //   if (detection) {
-  //    //     setReferenceDescriptor(detection.descriptor);
-  //    //     console.log('✅ Reference face descriptor extracted successfully');
-  //    //   } else {
-  //    //     console.warn('⚠️ No face detected in reference image');
-  //    //   }
-  //    // } catch (innerError) {
-  //    //   console.error('❌ Error processing reference image:', innerError);
-  //    // }
-  //  } catch (error) {
-  //    console.error('❌ Error loading models:', error);
-  //    setCameraError('Error loading face detection models');
-  //  }
-  //};
-  //
-  //loadModels();
-  // }, []);
-  //
-  //// Initialize webcam
+  // Initialize webcam with proper video loading handling
   useEffect(() => {
     const initializeCamera = async () => {
       try {
@@ -80,7 +49,21 @@ const Authentication: React.FC = () => {
           if (videoRef.current) {
             videoRef.current.srcObject = stream;
             streamRef.current = stream;
-            console.log('✅ Camera initialized successfully');
+
+            // Wait for video to be ready
+            await new Promise(resolve => {
+              if (videoRef.current) {
+                videoRef.current.onloadedmetadata = () => {
+                  videoRef.current?.play();
+                  resolve(true);
+                };
+              }
+            });
+
+            console.log('✅ Camera initialized successfully', {
+              width: videoRef.current.videoWidth,
+              height: videoRef.current.videoHeight,
+            });
           }
           setCameraError('');
         } else {
@@ -109,130 +92,201 @@ const Authentication: React.FC = () => {
     };
   }, [isCameraOn]);
 
-  // Face detection effect
-  //useEffect(() => {
-  //  console.log('startFaceDetection useEffect');
-  //  let animationFrameId: number;
-  //  let frameCount = 0;
-  //  const LOGGING_INTERVAL = 30; // Log every 30 frames
-  //
-  //  const startFaceDetection = async () => {
-  //    if (!videoRef.current || !canvasRef.current || !isModelLoaded || !isCameraOn || !videoRef.current.srcObject) {
-  //      console.log('⚠️ Face detection prerequisites not met:', {
-  //        videoReady: !!videoRef.current,
-  //        canvasReady: !!canvasRef.current,
-  //        modelsLoaded: isModelLoaded,
-  //        cameraOn: isCameraOn,
-  //        videoStream: !!videoRef.current?.srcObject,
-  //      });
-  //      return;
-  //    }
-  //
-  //    console.log('🎥 Starting face detection process...');
-  //    const video = videoRef.current;
-  //    const canvas = canvasRef.current;
-  //
-  //    // Wait for video metadata to be loaded
-  //    if (video.readyState !== video.HAVE_ENOUGH_DATA) {
-  //      console.log('⏳ Waiting for video data...');
-  //      await new Promise<void>(resolve => {
-  //        video.addEventListener(
-  //          'loadeddata',
-  //          () => {
-  //            console.log('✅ Video data loaded');
-  //            resolve();
-  //          },
-  //          { once: true }
-  //        );
-  //      });
-  //    }
-  //
-  //    const displaySize = { width: video.videoWidth, height: video.videoHeight };
-  //    canvas.width = displaySize.width;
-  //    canvas.height = displaySize.height;
-  //
-  //    const processVideo = async () => {
-  //      if (!video || !canvas || video.paused || video.ended) return;
-  //
-  //      frameCount++;
-  //      const shouldLog = frameCount % LOGGING_INTERVAL === 0;
-  //      console.log('video', video);
-  //      const detections = await faceapi.detectAllFaces(video).withFaceLandmarks().withFaceDescriptors();
-  //
-  //      if (shouldLog) {
-  //        console.log(`👀 Detected ${detections.length} faces in frame ${frameCount}`);
-  //      }
-  //
-  //      const context = canvas.getContext('2d');
-  //      if (context) context.clearRect(0, 0, canvas.width, canvas.height);
-  //
-  //      if (detections.length > 0) {
-  //        console.log('Face detected');
-  //        const faceMatcher = new faceapi.FaceMatcher(
-  //          [
-  //            {
-  //              descriptor: referenceDescriptor,
-  //              label: 'Reference',
-  //            },
-  //          ],
-  //          0.6
-  //        );
-  //
-  //        detections.forEach((detection, index) => {
-  //          const resizedDetection = faceapi.resizeResults(detection, displaySize);
-  //          const match = faceMatcher.findBestMatch(detection.descriptor);
-  //          const matchConfidence = 1 - match.distance;
-  //
-  //          if (match.label === 'Reference' && matchConfidence > 0.6) {
-  //            if (shouldLog) {
-  //              console.log(`✅ Face ${index + 1}: Match found! Confidence: ${(matchConfidence * 100).toFixed(1)}%`);
-  //            }
-  //            handleRecognitionResult(`Match found! Confidence: ${(matchConfidence * 100).toFixed(1)}%`);
-  //
-  //            new faceapi.draw.DrawBox(resizedDetection.detection.box, {
-  //              label: `Authenticated (${(matchConfidence * 100).toFixed(1)}%)`,
-  //              boxColor: '#00ff00',
-  //              drawLabelOptions: {
-  //                fontSize: 20,
-  //                fontStyle: 'bold',
-  //              },
-  //            }).draw(canvas);
-  //          } else {
-  //            if (shouldLog) {
-  //              console.log(`❌ Face ${index + 1}: No match found (Distance: ${match.distance.toFixed(3)})`);
-  //            }
-  //            handleRecognitionResult('No match found');
-  //
-  //            new faceapi.draw.DrawBox(resizedDetection.detection.box, {
-  //              label: 'Unknown',
-  //              boxColor: '#ff0000',
-  //              drawLabelOptions: {
-  //                fontSize: 20,
-  //                fontStyle: 'bold',
-  //              },
-  //            }).draw(canvas);
-  //          }
-  //        });
-  //      }
-  //
-  //      if (isCameraOn && video.srcObject) {
-  //        animationFrameId = requestAnimationFrame(processVideo);
-  //      }
-  //    };
-  //
-  //    processVideo();
-  //  };
-  //
-  //  setTimeout(() => startFaceDetection(), 5000);
-  //
-  //  return () => {
-  //    if (animationFrameId) {
-  //      cancelAnimationFrame(animationFrameId);
-  //      console.log('🛑 Face detection stopped');
-  //    }
-  //  };
-  //}, [isModelLoaded, referenceDescriptor, isCameraOn]);
-  //
+  // Load TensorFlow model with improved error handling
+  useEffect(() => {
+    const loadMobileNet = async () => {
+      try {
+        console.log('🚀 Loading MobileNet model...');
+        mobileNetRef.current = await mobilenet.load({
+          version: 2,
+          alpha: 1.0,
+        });
+        console.log('✅ MobileNet model loaded successfully');
+
+        // Load and process reference image
+        const img = new Image();
+        img.crossOrigin = 'anonymous';
+        img.src = ahmedImage;
+        img.onload = async () => {
+          const embedding = await getImageEmbedding(img);
+          if (embedding) {
+            referenceEmbeddingRef.current = embedding;
+            console.log('✅ Reference embedding extracted');
+          }
+        };
+      } catch (error) {
+        console.error('❌ Error loading MobileNet model:', error);
+      }
+    };
+
+    loadMobileNet();
+
+    return () => {
+      if (referenceEmbeddingRef.current) {
+        referenceEmbeddingRef.current.dispose();
+      }
+    };
+  }, []);
+
+  // Add function to get image embedding
+  const getImageEmbedding = async (image: HTMLImageElement | HTMLVideoElement) => {
+    if (!mobileNetRef.current) return null;
+
+    try {
+      // Convert image to tensor
+      const imageTensor = tf.browser.fromPixels(image);
+      const resized = tf.image.resizeBilinear(imageTensor, [224, 224]);
+      const normalized = tf.div(resized, 255.0);
+      const batched = tf.expandDims(normalized, 0);
+
+      // Get embedding from the second-to-last layer
+      const embedding = tf.tidy(() => {
+        const activation = mobileNetRef.current!.infer(batched, true) as tf.Tensor;
+        // Normalize the embedding
+        return tf.div(activation, tf.norm(activation));
+      });
+
+      // Clean up intermediate tensors
+      imageTensor.dispose();
+      resized.dispose();
+      normalized.dispose();
+      batched.dispose();
+
+      return embedding;
+    } catch (error) {
+      console.error('❌ Error getting image embedding:', error);
+      return null;
+    }
+  };
+
+  // Add function to compare embeddings
+  const compareEmbeddings = (embedding1: tf.Tensor, embedding2: tf.Tensor): number => {
+    return tf.tidy(() => {
+      // Calculate cosine similarity directly since vectors are already normalized
+      const similarity = tf.sum(tf.mul(embedding1, embedding2)).dataSync()[0];
+      return similarity;
+    });
+  };
+
+  // Modify the existing detectFaces function to include face recognition
+  const detectFaces = useCallback(async () => {
+    if (
+      !modelRef.current ||
+      !videoRef.current ||
+      !canvasRef.current ||
+      !isDetectingRef.current ||
+      !mobileNetRef.current ||
+      !referenceEmbeddingRef.current
+    ) {
+      return;
+    }
+
+    const video = videoRef.current;
+    const canvas = canvasRef.current;
+    const ctx = canvas.getContext('2d');
+
+    if (!ctx || video.paused || video.ended) {
+      return;
+    }
+
+    if (video.readyState !== video.HAVE_ENOUGH_DATA) {
+      animationFrameRef.current = requestAnimationFrame(detectFaces);
+      return;
+    }
+
+    if (canvas.width !== video.videoWidth || canvas.height !== video.videoHeight) {
+      canvas.width = video.videoWidth;
+      canvas.height = video.videoHeight;
+    }
+
+    try {
+      const predictions = await modelRef.current.estimateFaces(video, false);
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      if (predictions.length > 0) {
+        // Get embedding for the current frame
+        const currentEmbedding = await getImageEmbedding(video);
+
+        if (currentEmbedding) {
+          const score = compareEmbeddings(currentEmbedding, referenceEmbeddingRef.current);
+          setMatchScore(score);
+
+          // Draw face detections with color based on match
+          predictions.forEach((prediction: any) => {
+            const start = prediction.topLeft as [number, number];
+            const end = prediction.bottomRight as [number, number];
+            const size = [end[0] - start[0], end[1] - start[1]];
+
+            // Set color based on match score
+            ctx.strokeStyle = score > matchThreshold ? '#00ff00' : '#ff0000';
+            ctx.lineWidth = 2;
+            ctx.strokeRect(start[0], start[1], size[0], size[1]);
+
+            // Draw landmarks
+            const landmarks = prediction.landmarks;
+            ctx.fillStyle = score > matchThreshold ? '#00ff00' : '#ff0000';
+            landmarks.forEach((landmark: [number, number]) => {
+              ctx.beginPath();
+              ctx.arc(landmark[0], landmark[1], 3, 0, 2 * Math.PI);
+              ctx.fill();
+            });
+
+            // Add match percentage text
+            ctx.font = '16px Arial';
+            ctx.fillStyle = 'white';
+            ctx.strokeStyle = 'black';
+            ctx.lineWidth = 3;
+            const matchText = `Match: ${(score * 100).toFixed(1)}%`;
+            ctx.strokeText(matchText, start[0], start[1] - 5);
+            ctx.fillText(matchText, start[0], start[1] - 5);
+          });
+
+          // Update result message based on match score
+          if (score > matchThreshold) {
+            handleRecognitionResult(
+              `${dict[selectedLanguage].matchFound || 'Match Found'} (${(score * 100).toFixed(1)}%)`
+            );
+          } else {
+            handleRecognitionResult(
+              `${dict[selectedLanguage].noMatchFound || 'No Match Found'} (${(score * 100).toFixed(1)}%)`
+            );
+          }
+
+          currentEmbedding.dispose();
+        }
+      } else {
+        handleRecognitionResult(`${dict[selectedLanguage].noFaceDetected || 'No face detected'}`);
+      }
+    } catch (error) {
+      console.error('❌ Error during face detection:', error);
+    }
+
+    animationFrameRef.current = requestAnimationFrame(detectFaces);
+  }, [selectedLanguage]);
+
+  // Start/stop face detection with improved state management
+  useEffect(() => {
+    if (isCameraOn && isModelLoaded) {
+      console.log('🎬 Starting face detection');
+      isDetectingRef.current = true;
+
+      setTimeout(() => detectFaces(), 3000);
+    } else {
+      console.log('⏹️ Stopping face detection');
+      isDetectingRef.current = false;
+      if (animationFrameRef.current) {
+        cancelAnimationFrame(animationFrameRef.current);
+      }
+    }
+
+    return () => {
+      isDetectingRef.current = false;
+      if (animationFrameRef.current) {
+        cancelAnimationFrame(animationFrameRef.current);
+      }
+    };
+  }, [isCameraOn, isModelLoaded, detectFaces]);
+
   // Handle keyboard shortcuts
   useEffect(() => {
     const handleKeyPress = (e: KeyboardEvent) => {
@@ -380,10 +434,10 @@ const Authentication: React.FC = () => {
             )}
             <button
               onClick={toggleFullscreen}
-              className="p-2 rounded bg-black/50 hover:bg-black/70 text-white transition-opacity duration-300
+              className="p-2 rounded bg-dark-surface hover:bg-black/70 text-white transition-opacity duration-300
               ${showControls || (!isFullscreen && containerRef.current?.matches(':hover')) ? 'opacity-100' : 'opacity-0'}"
             >
-              {isFullscreen ? <Minimize2 size={24} /> : <Maximize2 size={24} />}
+              {isFullscreen ? <Minimize2 size={20} /> : <Maximize2 size={20} />}
             </button>
           </div>
         </div>

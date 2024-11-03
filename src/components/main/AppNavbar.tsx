@@ -73,7 +73,7 @@ const AppNavbar = () => {
 
   const user = {
     settings: {
-      renderAnimations: true,
+      renderAnimations: false,
     },
   };
 
