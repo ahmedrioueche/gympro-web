@@ -1,6 +1,6 @@
 import { FaTimes, FaTrash } from 'react-icons/fa';
 import React from 'react';
-import { dict } from '../../../lib/dict';
+import { dict } from '../../../utils/dict';
 import { useLanguage } from '../../../context/LanguageContext';
 
 interface DeleteMemberModalProps {
@@ -13,7 +13,7 @@ const DeleteMemberModal: React.FC<DeleteMemberModalProps> = ({ memberId, isOpen,
   const selectedLanguage = useLanguage();
 
   const handleDelete = () => {
-    console.log("Deleting member with ID:", memberId);
+    console.log('Deleting member with ID:', memberId);
     onClose();
   };
 

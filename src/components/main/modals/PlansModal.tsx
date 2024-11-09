@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { X, Crown, CheckCircle } from 'lucide-react';
-import { dict } from '../../../lib/dict';
+import { dict } from '../../../utils/dict';
 import { useLanguage } from '../../../context/LanguageContext';
 
 interface Plan {
@@ -16,7 +16,6 @@ interface TrialDropDownProps {
   onClose: () => void;
 }
 
-
 const TrialDropDown: React.FC<TrialDropDownProps> = ({ isOpen, onClose }) => {
   const selectedLanguage = useLanguage();
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -30,8 +29,8 @@ const TrialDropDown: React.FC<TrialDropDownProps> = ({ isOpen, onClose }) => {
       features: [
         dict[selectedLanguage].plansFeatures[0],
         dict[selectedLanguage].plansFeatures[1],
-        dict[selectedLanguage].plansFeatures[2]
-      ]
+        dict[selectedLanguage].plansFeatures[2],
+      ],
     },
     {
       id: 2,
@@ -41,9 +40,9 @@ const TrialDropDown: React.FC<TrialDropDownProps> = ({ isOpen, onClose }) => {
         dict[selectedLanguage].plansFeatures[3],
         dict[selectedLanguage].plansFeatures[4],
         dict[selectedLanguage].plansFeatures[5],
-        dict[selectedLanguage].plansFeatures[6]
+        dict[selectedLanguage].plansFeatures[6],
       ],
-      popular: true
+      popular: true,
     },
     {
       id: 3,
@@ -54,9 +53,9 @@ const TrialDropDown: React.FC<TrialDropDownProps> = ({ isOpen, onClose }) => {
         dict[selectedLanguage].plansFeatures[8],
         dict[selectedLanguage].plansFeatures[9],
         dict[selectedLanguage].plansFeatures[10],
-        dict[selectedLanguage].plansFeatures[11]
-      ]
-    }
+        dict[selectedLanguage].plansFeatures[11],
+      ],
+    },
   ];
 
   useEffect(() => {
@@ -79,27 +78,21 @@ const TrialDropDown: React.FC<TrialDropDownProps> = ({ isOpen, onClose }) => {
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div 
-        ref={dropdownRef}
-        className="bg-white rounded-lg shadow-xl w-full max-w-2xl mx-4 overflow-hidden"
-      >
+      <div ref={dropdownRef} className="bg-white rounded-lg shadow-xl w-full max-w-2xl mx-4 overflow-hidden">
         {/* Header */}
         <div className="flex items-center justify-between p-4 border-b">
           <div className="flex items-center space-x-2">
             <Crown className="w-6 h-6 text-yellow-500" />
             <h2 className="text-xl font-semibold">{dict[selectedLanguage].chooseYourPlan}</h2>
           </div>
-          <button
-            onClick={onClose}
-            className="p-1 hover:bg-gray-100 rounded-full transition-colors"
-          >
+          <button onClick={onClose} className="p-1 hover:bg-gray-100 rounded-full transition-colors">
             <X className="w-6 h-6" />
           </button>
         </div>
 
         {/* Plans Grid */}
         <div className="p-6 grid grid-cols-1 md:grid-cols-3 gap-4">
-          {plans.map((plan) => (
+          {plans.map(plan => (
             <div
               key={plan.id}
               className={`relative border rounded-lg p-4 hover:shadow-md transition-shadow cursor-pointer ${
@@ -128,9 +121,7 @@ const TrialDropDown: React.FC<TrialDropDownProps> = ({ isOpen, onClose }) => {
               </ul>
               <button
                 className={`w-full mt-4 py-2 px-4 rounded-lg transition-colors ${
-                  selectedPlan === plan.id
-                    ? 'bg-blue-500 text-white'
-                    : 'bg-gray-100 hover:bg-gray-200 text-gray-800'
+                  selectedPlan === plan.id ? 'bg-blue-500 text-white' : 'bg-gray-100 hover:bg-gray-200 text-gray-800'
                 }`}
               >
                 {selectedPlan === plan.id ? dict[selectedLanguage].selected : dict[selectedLanguage].selectPlan}
@@ -141,17 +132,12 @@ const TrialDropDown: React.FC<TrialDropDownProps> = ({ isOpen, onClose }) => {
 
         {/* Footer */}
         <div className="border-t p-4 flex justify-end space-x-4">
-          <button
-            onClick={onClose}
-            className="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
-          >
+          <button onClick={onClose} className="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-lg transition-colors">
             {dict[selectedLanguage].cancel}
           </button>
           <button
             className={`px-4 py-2 rounded-lg transition-colors ${
-              selectedPlan
-                ? 'bg-blue-500 text-white hover:bg-blue-600'
-                : 'bg-gray-200 text-gray-400 cursor-not-allowed'
+              selectedPlan ? 'bg-blue-500 text-white hover:bg-blue-600' : 'bg-gray-200 text-gray-400 cursor-not-allowed'
             }`}
             disabled={!selectedPlan}
           >

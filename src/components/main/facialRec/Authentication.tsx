@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState, useCallback } from 'react';
 import gym_4 from '../../../assets/images/gym_4.svg';
-import { dict } from '../../../lib/dict';
+import { dict } from '../../../utils/dict';
 import { useLanguage } from '../../../context/LanguageContext';
 import ahmedImage from '../../../assets/images/ahmedDrioueche.jpg';
 import { Maximize2, Minimize2, Camera, CameraOff } from 'lucide-react';
@@ -361,11 +361,11 @@ const Authentication: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col h-screen overflow-hidden w-full p-2 bg-light-background dark:bg-dark-background transition-colors duration-300">
+    <div className="flex flex-col h-screen md:h-screen overflow-hidden w-full p-2 bg-light-background dark:bg-dark-background transition-colors duration-300">
       <div
         ref={containerRef}
         onMouseMove={handleMouseMove}
-        className={`relative flex flex-col ${isFullscreen ? 'h-screen w-screen p-0' : 'h-full w-full'}`}
+        className={`relative flex flex-col ${isFullscreen ? 'h-screen w-screen p-0' : 'h-5/6 md:h-full w-full'}`}
       >
         <div className="relative flex-grow bg-light-background dark:bg-dark-background rounded-xl shadow-inner overflow-hidden group">
           {cameraError ? (
@@ -375,7 +375,7 @@ const Authentication: React.FC = () => {
           ) : !isCameraOn ? (
             <div className="relative w-full h-full rounded-xl">
               <div
-                className="absolute inset-0 bg-cover md:bg-center -mt-8 md:mt-0 bg-no-repeat opacity-60"
+                className="absolute inset-0 md:bg-cover md:bg-center -mt-8 md:mt-0 bg-no-repeat opacity-60"
                 style={{
                   backgroundImage: `url(${gym_4})`,
                   height: '130%',
@@ -400,7 +400,7 @@ const Authentication: React.FC = () => {
             {/* Camera Controls */}
             <div
               className={`flex flex-col items-center justify-end p-6 space-y-4 transition-opacity duration-300
-                ${showControls || (!isFullscreen && containerRef.current?.matches(':hover')) ? 'opacity-100' : 'opacity-0'}`}
+              ${showControls || (!isFullscreen && containerRef.current?.matches(':hover')) ? 'opacity-100' : 'opacity-0'}`}
             >
               {!isCameraOn && (
                 <CustomButton
@@ -416,7 +416,7 @@ const Authentication: React.FC = () => {
             {isCameraOn && (
               <div
                 className={`w-full bg-black/40 text-white p-4 transition-opacity duration-300
-                  ${showResults || (!isFullscreen && containerRef.current?.matches(':hover')) ? 'opacity-100' : 'opacity-0'}`}
+                ${showResults || (!isFullscreen && containerRef.current?.matches(':hover')) ? 'opacity-100' : 'opacity-0'}`}
               >
                 <h2 className="text-lg mb-2 text-center">
                   {resultMessage ||
@@ -427,12 +427,20 @@ const Authentication: React.FC = () => {
           </div>
           <div className="absolute top-4 right-4 flex items-center space-x-2">
             {isCameraOn && (
-              <CustomButton onClick={toggleCamera} text="" type={'danger'} icon={<CameraOff size={20} />} />
+              <CustomButton
+                onClick={() => {
+                  toggleCamera();
+                  //toggleFullscreen();
+                }}
+                text=""
+                type={'danger'}
+                icon={<CameraOff size={20} />}
+              />
             )}
             <button
               onClick={toggleFullscreen}
-              className="p-2 rounded bg-dark-surface hover:bg-black/70 text-white transition-opacity duration-300
-              ${showControls || (!isFullscreen && containerRef.current?.matches(':hover')) ? 'opacity-100' : 'opacity-0'}"
+              className={`p-2 rounded dark:bg-dark-surface bg-light-surface hover:text-white hover:bg-black/70 dark:hover:bg-white dark:hover:text-gray-800 text-gray-800 dark:text-white transition-opacity duration-500
+              ${showControls || (!isFullscreen && containerRef.current?.matches(':hover')) ? 'opacity-100' : 'opacity-0'}`}
             >
               {isFullscreen ? <Minimize2 size={20} /> : <Maximize2 size={20} />}
             </button>

@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
 import React, { useState, useEffect } from 'react';
 import { motion, useInView } from 'framer-motion';
-import { faqs } from '../../lib/data';
+import { faqs } from '../../utils/data';
 
 interface FAQItemProps {
   question: string;
@@ -15,15 +15,15 @@ const FAQItem: React.FC<FAQItemProps> = ({ question, answer }) => {
   const inView = useInView(ref, { once: false });
 
   const variants = {
-    hidden: { opacity: 0, x: 100 },  // Start hidden to the right
-    visible: { opacity: 1, x: 0, transition: { duration: 0.8, ease: "easeOut" } } // Move to original position
+    hidden: { opacity: 0, x: 100 }, // Start hidden to the right
+    visible: { opacity: 1, x: 0, transition: { duration: 0.8, ease: 'easeOut' } }, // Move to original position
   };
 
   return (
     <motion.div
       ref={ref}
       initial="hidden"
-      animate={inView ? "visible" : "hidden"}
+      animate={inView ? 'visible' : 'hidden'}
       variants={variants}
       className={`border-none mb-4 text-dark-text-primary focus:outline-none`}
     >
@@ -37,7 +37,9 @@ const FAQItem: React.FC<FAQItemProps> = ({ question, answer }) => {
         </span>
       </button>
       {isOpen && (
-        <div className={`px-6 py-4 mt-2 text-start rounded-md shadow-md bg-gradient-to-r from-blue-600 to-purple-400 dark:from-blue-800 dark:to-purple-600 transition-colors`}>
+        <div
+          className={`px-6 py-4 mt-2 text-start rounded-md shadow-md bg-gradient-to-r from-blue-600 to-purple-400 dark:from-blue-800 dark:to-purple-600 transition-colors`}
+        >
           {answer}
         </div>
       )}

@@ -1,5 +1,5 @@
-"use client";
-import { themes } from '../lib/themeConfig';
+'use client';
+import { themes } from '../utils/themeConfig';
 import React, { createContext, useState, useEffect, useContext, ReactNode } from 'react';
 
 interface ThemeContextType {
@@ -18,7 +18,7 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
   const [loading, setLoading] = useState(true); // Loading state to prevent theme flickering
 
   useEffect(() => {
-    const savedTheme = localStorage.getItem("theme");
+    const savedTheme = localStorage.getItem('theme');
     if (savedTheme) {
       setCurrentTheme(savedTheme); // Set the theme from localStorage
     }
@@ -28,24 +28,20 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
   useEffect(() => {
     if (!loading) {
       // Remove all themes first
-      Object.keys(themes).forEach((theme) => {
+      Object.keys(themes).forEach(theme => {
         document.documentElement.classList.remove(theme);
       });
 
       // Add the current theme
       document.documentElement.classList.add(currentTheme);
-      localStorage.setItem("theme", currentTheme);
+      localStorage.setItem('theme', currentTheme);
     }
   }, [currentTheme, loading]);
 
   // Don't render anything until loading is complete
   if (loading) return null;
 
-  return (
-    <ThemeContext.Provider value={{ currentTheme, setCurrentTheme }}>
-      {children}
-    </ThemeContext.Provider>
-  );
+  return <ThemeContext.Provider value={{ currentTheme, setCurrentTheme }}>{children}</ThemeContext.Provider>;
 };
 
 export const useTheme = (): ThemeContextType => {

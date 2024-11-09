@@ -1,7 +1,7 @@
 import React from 'react';
-import { Member } from '../../../lib/types';
+import { Member } from '../../../utils/types';
 import gym_5 from '../../../assets/images/gym_5.svg';
-import { dict } from '../../../lib/dict';
+import { dict } from '../../../utils/dict';
 import { useLanguage } from '../../../context/LanguageContext';
 
 interface MemberProfileProps {
@@ -81,7 +81,9 @@ const MemberProfile: React.FC<MemberProfileProps> = ({ onEdit, onDelete }) => {
                 <div className="flex justify-between">
                   <span className="font-medium">{dict[selectedLanguage].status}:</span>
                   <span className={member.isSubscriptionActive ? 'text-green-600' : 'text-red-600'}>
-                    {member.isSubscriptionActive ? dict[selectedLanguage].activeStatus : dict[selectedLanguage].inactiveStatus}
+                    {member.isSubscriptionActive
+                      ? dict[selectedLanguage].activeStatus
+                      : dict[selectedLanguage].inactiveStatus}
                   </span>
                 </div>
                 <div className="flex justify-between">

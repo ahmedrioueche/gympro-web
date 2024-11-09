@@ -1,5 +1,5 @@
 // src/features/userSlice.ts
-import { User } from '../lib/types';
+import { User } from '../utils/types';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 // Set initial state

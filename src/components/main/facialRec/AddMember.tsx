@@ -1,37 +1,56 @@
 import React, { useState } from 'react';
 import ImageModal from '../modals/ImageModal';
-import { Member } from '../../../lib/types';
-import { MemberApi } from '../../../lib/apiHelper';
+import { Member } from '../../../utils/types';
+import { MemberApi } from '../../../utils/apiHelper';
 import VideoSection from './VideoSection';
 import InputSection from './InputSection';
 import gym_6 from '../../../assets/images/gym_6.svg';
+import { supabaseUploadImage } from '../../../utils/supabase';
+import { useAuth } from '../../../context/AuthContext';
 
 const AddMember: React.FC = () => {
   const [isProcessing, setIsProcessing] = useState(false);
   const [capturedImage, setCapturedImage] = useState<File | null>(null);
   const [capturedImageUrl, setCapturedImageUrl] = useState<string | undefined>('');
-
+  const userContext = useAuth();
+  console.log('userContext', userContext);
+  const userId = userContext?.user?.id!;
   const memberApi = new MemberApi();
+  const token = sessionStorage.getItem('token');
 
   const createMember = async (memberData: Partial<Member>) => {
-    const currentDate = new Date();
-    const member: Member = {
-      name: memberData.name!,
-      gender: memberData.gender!,
-      joinDate: currentDate,
-      subscriptionType: memberData.subscriptionType!,
-      isSubscriptionActive: true,
-      lastSubscriptionDate: currentDate,
-      lastPaymentValue: memberData.lastPaymentValue,
-      image: capturedImage || memberData.image!,
-      imagePath: capturedImageUrl,
-    };
-
+    console.log('user', userId);
     try {
+      const currentDate = new Date();
+      const member: Member = {
+        name: memberData.name!,
+        gender: memberData.gender!,
+        joinDate: currentDate,
+        subscriptionType: memberData.subscriptionType!,
+        isSubscriptionActive: true,
+        lastSubscriptionDate: currentDate,
+        lastPaymentValue: memberData.lastPaymentValue,
+        image: capturedImage || memberData.image!,
+        imagePath: capturedImageUrl,
+      };
+
       const response = await memberApi.addMember(member);
       console.log('response', response);
+
+      try {
+        let supabaseImageStorageResponse;
+        const imageToUpload = capturedImage ? capturedImage : memberData.image;
+        const imageName = `member_${response.user.id}`;
+        if (imageToUpload) {
+          supabaseImageStorageResponse = await supabaseUploadImage(token!, userId, imageToUpload, imageName);
+        }
+
+        console.log('supabaseImageStorageResponse', supabaseImageStorageResponse);
+      } catch (error) {
+        console.log('supabaseImageStorageResponse error', error);
+      }
     } catch (error) {
-      console.error('Error adding member:', error);
+      console.log('error adding member', error);
     } finally {
       setIsProcessing(false);
     }

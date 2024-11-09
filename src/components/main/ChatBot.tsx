@@ -1,7 +1,9 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Send, X, Bot } from 'lucide-react';
-import { dict } from '../../lib/dict';
+import { dict } from '../../utils/dict';
 import { useLanguage } from '../../context/LanguageContext';
+import { getGeminiCBReply } from '../../utils/gemini';
+import { FaTrash } from 'react-icons/fa';
 
 interface Message {
   id: number;
@@ -26,32 +28,81 @@ const ChatbotDropdown: React.FC<{
   };
 
   useEffect(() => {
+    const storedConversation = localStorage.getItem('conversationHistory');
+    if (storedConversation) {
+      let conversation = JSON.parse(storedConversation);
+      // Ensure the welcome message is always at the top
+      if (conversation[0]?.text !== dict[selectedLanguage].assistantGreeting) {
+        conversation = [
+          { id: Date.now(), text: dict[selectedLanguage].assistantGreeting, isBot: true },
+          ...conversation,
+        ];
+      }
+      setMessages(conversation);
+    } else {
+      // If no conversation history, set the welcome message as the first message
+      setMessages([{ id: Date.now(), text: dict[selectedLanguage].assistantGreeting, isBot: true }]);
+    }
     scrollToBottom();
-  }, [messages]);
+  }, [selectedLanguage]);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  useEffect(() => {
+    if (isOpen) {
+      setTimeout(() => scrollToBottom(), 100);
+    }
+  }, [isOpen]);
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    // Get chatbot replies based on the selected language
+    const replies = dict[selectedLanguage].chatbotReplies;
+
+    // Don't proceed if the input message is empty
     if (!inputMessage.trim()) return;
 
-    // Add user's message to the chat
-    setMessages(prev => [...prev, { id: Date.now(), text: inputMessage, isBot: false }]);
+    // Add user's message to the conversation
+    const userMessage = { id: Date.now(), text: inputMessage, isBot: false };
+    setMessages(prev => [...prev, userMessage]);
+
+    // Clear the input field after submitting
     setInputMessage('');
 
-    // Simulate bot response with a random message from chatbotReplies
-    setTimeout(() => {
-      const replies = dict[selectedLanguage].chatbotReplies;
-      const randomKey = Object.keys(replies)[Math.floor(Math.random() * Object.keys(replies).length)];
-      const randomReply = replies[randomKey];
+    // Get chatbot reply handler
+    const getCBReply = async () => {
+      const response = await getGeminiCBReply(inputMessage);
+      console.log('getCBReply response:', response);
+      return response; // Ensure you return the response here
+    };
 
-      setMessages(prev => [
-        ...prev,
-        {
-          id: Date.now() + 1,
-          text: randomReply,
-          isBot: true,
-        },
-      ]);
-    }, 1000);
+    // Retrieve the current conversation history from localStorage
+    let conversationHistory = JSON.parse(localStorage.getItem('conversationHistory') || '[]');
+
+    // Add user's message to the conversation history
+    conversationHistory.push(userMessage);
+
+    // Get bot's reply (if any)
+    let chatBotReply = (await getCBReply()) || '';
+
+    // If no response, fallback to a random reply
+    if (!chatBotReply?.trim()) {
+      const randomKey = Object.keys(replies)[Math.floor(Math.random() * Object.keys(replies).length)];
+      chatBotReply = replies[randomKey];
+    }
+
+    // Add chatbot's reply to the conversation
+    const botMessage = {
+      id: Date.now() + 1,
+      text: chatBotReply,
+      isBot: true,
+    };
+    conversationHistory.push(botMessage);
+
+    // Update the conversation history in localStorage
+    localStorage.setItem('conversationHistory', JSON.stringify(conversationHistory));
+
+    // Update the state to render the new conversation
+    setMessages(conversationHistory);
   };
 
   // Close dropdown on outside click
@@ -71,35 +122,50 @@ const ChatbotDropdown: React.FC<{
     };
   }, [isOpen, onClose]);
 
+  const clearConvo = () => {
+    localStorage.removeItem('conversationHistory');
+    setMessages([]);
+  };
+
   return (
     <div
       ref={dropdownRef}
-      className={`absolute light-scrollbar dark:dark-scrollbar right-0 top-16 w-80 md:w-96 z-100 bg-light-surface dark:bg-dark-surface rounded-lg shadow-xl transform transition-all duration-300 ease-out origin-top ${
-        isOpen ? 'opacity-100 scale-y-100 translate-y-0' : 'opacity-0 scale-y-0 -translate-y-4 pointer-events-none'
+      className={`light-scrollbar dark:dark-scrollbar z-100 absolute right-0 top-16 w-80 origin-top transform rounded-lg bg-light-surface shadow-xl transition-all duration-300 ease-out dark:bg-dark-surface md:right-12 md:w-96 ${
+        isOpen ? 'translate-y-0 scale-y-100 opacity-100' : 'pointer-events-none -translate-y-4 scale-y-0 opacity-0'
       }`}
     >
       {/* Header */}
-      <div className="flex items-center justify-between p-3 border-b dark:border-gray-700">
+      <div className="flex items-center justify-between border-b p-3 dark:border-gray-700">
         <div className="flex items-center space-x-2">
-          <Bot className="w-5 h-5 text-blue-500" />
+          <Bot className="h-5 w-5 text-blue-500" />
           <h2 className="text-base font-semibold dark:text-white">{dict[selectedLanguage].botTitle}</h2>
         </div>
-        <button
-          onClick={onClose}
-          className="p-1 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full transition-colors duration-200"
-        >
-          <X className="w-4 h-4 text-gray-500 dark:text-gray-400" />
-        </button>
+        <div className="flex flex-row space-x-2">
+          {messages.length > 0 && (
+            <button
+              onClick={clearConvo}
+              className="rounded-full p-1 text-gray-500 transition-colors duration-200 hover:cursor-pointer hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-600"
+            >
+              <FaTrash />
+            </button>
+          )}
+          <button
+            onClick={onClose}
+            className="rounded-full p-1 transition-colors duration-200 hover:bg-gray-100 dark:hover:bg-gray-700"
+          >
+            <X className="h-4 w-4 text-gray-500 dark:text-gray-400" />
+          </button>
+        </div>
       </div>
 
       {/* Messages Container */}
-      <div className="h-80 overflow-y-auto p-3 space-y-3">
+      <div className="h-96 space-y-3 overflow-y-auto p-3">
         {messages.map(message => (
           <div key={message.id} className={`flex ${message.isBot ? 'justify-start' : 'justify-end'}`}>
             <div
-              className={`max-w-[80%] rounded-lg p-2 text-sm text-start ${
+              className={`w-fit min-w-[60px] max-w-[80%] rounded-lg p-2 text-start text-sm ${
                 message.isBot
-                  ? 'bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200'
+                  ? 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200'
                   : 'bg-blue-500 text-white'
               }`}
             >
@@ -111,20 +177,20 @@ const ChatbotDropdown: React.FC<{
       </div>
 
       {/* Input Form */}
-      <form onSubmit={handleSubmit} className="border-t dark:border-gray-700 p-3">
+      <form onSubmit={handleSubmit} className="border-t p-3 dark:border-gray-700">
         <div className="flex items-center space-x-2">
           <input
             type="text"
             value={inputMessage}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => setInputMessage(e.target.value)}
             placeholder={dict[selectedLanguage].botPlaceholder}
-            className="flex-1 p-2 text-sm border dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+            className="flex-1 rounded-lg border p-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
           />
           <button
             type="submit"
-            className="p-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors duration-200"
+            className="rounded-lg bg-blue-500 p-2 text-white transition-colors duration-200 hover:bg-blue-600"
           >
-            <Send className="w-4 h-4" />
+            <Send className="h-4 w-4" />
           </button>
         </div>
       </form>

@@ -1,15 +1,17 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { dict } from '../../lib/dict';
-import { featureTexts } from '../../lib/data';
+import { dict } from '../../utils/dict';
+import { featureTexts } from '../../utils/data';
 import { useLanguage } from '../../context/LanguageContext';
 
 const Features = () => {
   const selectedLanguage = useLanguage();
   return (
-    <section id='features'>
-      <div className={`py-12 px-6 bg-light-background dark:bg-dark-background`} >
-        <h2 className={`md:text-3xl text-2xl font-bold text-center mb-6 font-satisfy dark:text-dark-text text-light-primary`}>
+    <section id="features">
+      <div className={`py-12 px-6 bg-light-background dark:bg-dark-background`}>
+        <h2
+          className={`md:text-3xl text-2xl font-bold text-center mb-6 font-satisfy dark:text-dark-text text-light-primary`}
+        >
           {dict[selectedLanguage].importantFeatures}
         </h2>
         <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -23,9 +25,7 @@ const Features = () => {
               whileHover={{ scale: 1.05 }}
             >
               <div className="text-4xl mb-4">{feature.icon}</div>
-              <h3 className={`text-xl font-semibold`}>
-                {feature.title}
-              </h3>
+              <h3 className={`text-xl font-semibold`}>{feature.title}</h3>
               <p className={`mt-2 text-light-text-secondary dark:text-dark-text-secondary`}>{feature.description}</p>
             </motion.div>
           ))}

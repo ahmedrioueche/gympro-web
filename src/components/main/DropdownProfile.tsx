@@ -1,9 +1,9 @@
-import { dict } from '../../lib/dict';
+import { dict } from '../../utils/dict';
 import { useEffect, useRef } from 'react';
 import { FaSignOutAlt, FaCog, FaBell, FaExclamationCircle, FaUser, FaCommentAlt, FaRocket } from 'react-icons/fa';
 import defaultAvatarUrl from '../../assets/images/bench_guy.png';
 import logo from '../../assets/images/bench_guy.png';
-import { User } from '../../lib/types';
+import { User } from '../../utils/types';
 import { Bot } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useLanguage } from '../../context/LanguageContext';

@@ -3,7 +3,7 @@ import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { FaHome, FaTachometerAlt, FaUserPlus, FaUserShield } from 'react-icons/fa';
 import { FaPeopleGroup } from 'react-icons/fa6';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { dict } from '../../lib/dict';
+import { dict } from '../../utils/dict';
 import { useLanguage } from '../../context/LanguageContext';
 
 const Sidemenu = () => {
@@ -18,14 +18,14 @@ const Sidemenu = () => {
 
   const handleLinkClick = (link: string) => {
     setCurrentPage(link);
-    navigate(`/main/${link}`)
-  }
+    navigate(`/main/${link}`);
+  };
 
   useEffect(() => {
     const page: string | undefined = location.pathname.split('/').pop();
     setCurrentPage(page!);
   }, [location]);
-  
+
   const selectedLanguage = useLanguage();
 
   return (
@@ -40,28 +40,38 @@ const Sidemenu = () => {
       </button>
 
       <ul className="space-y-4 mt-6">
-        <li onClick={() => handleLinkClick("home")} 
-            className={`flex items-center space-x-2 p-2 cursor-pointer hover:bg-light-primary dark:hover:bg-dark-primary hover:text-dark-text-primary ${currentPage === "home" ? 'bg-gray-100 dark:bg-gray-700' : ''}`}>
+        <li
+          onClick={() => handleLinkClick('home')}
+          className={`flex items-center space-x-2 p-2 cursor-pointer hover:bg-light-primary dark:hover:bg-dark-primary hover:text-dark-text-primary ${currentPage === 'home' ? 'bg-gray-100 dark:bg-gray-700' : ''}`}
+        >
           <FaHome className={`w-6 h-6 mr-2`} />
           {isExpanded && <span className="font-f2">{dict[selectedLanguage].home}</span>}
         </li>
-        <li onClick={() => handleLinkClick("authentication")} 
-            className={`flex items-center space-x-2 p-2 cursor-pointer hover:bg-light-primary dark:hover:bg-dark-primary hover:text-dark-text-primary ${currentPage === "authentication" ? 'bg-gray-100 dark:bg-gray-700' : ''}`}>
+        <li
+          onClick={() => handleLinkClick('authentication')}
+          className={`flex items-center space-x-2 p-2 cursor-pointer hover:bg-light-primary dark:hover:bg-dark-primary hover:text-dark-text-primary ${currentPage === 'authentication' ? 'bg-gray-100 dark:bg-gray-700' : ''}`}
+        >
           <FaUserShield className={`w-6 h-6 mr-2`} />
           {isExpanded && <span className="font-f2">{dict[selectedLanguage].authentication}</span>}
         </li>
-        <li onClick={() => handleLinkClick("add-member")} 
-            className={`flex items-center space-x-2 p-2 cursor-pointer hover:bg-light-primary dark:hover:bg-dark-primary hover:text-dark-text-primary ${currentPage === "add-member" ? 'bg-gray-100 dark:bg-gray-700' : ''}`}>
+        <li
+          onClick={() => handleLinkClick('add-member')}
+          className={`flex items-center space-x-2 p-2 cursor-pointer hover:bg-light-primary dark:hover:bg-dark-primary hover:text-dark-text-primary ${currentPage === 'add-member' ? 'bg-gray-100 dark:bg-gray-700' : ''}`}
+        >
           <FaUserPlus className={`w-6 h-6 mr-2`} />
           {isExpanded && <span className="font-f2">{dict[selectedLanguage].addMember}</span>}
         </li>
-        <li onClick={() => handleLinkClick("members")} 
-            className={`flex items-center space-x-2 p-2 cursor-pointer hover:bg-light-primary dark:hover:bg-dark-primary hover:text-dark-text-primary ${currentPage === "members" ? 'bg-gray-100 dark:bg-gray-700' : ''}`}>
+        <li
+          onClick={() => handleLinkClick('members')}
+          className={`flex items-center space-x-2 p-2 cursor-pointer hover:bg-light-primary dark:hover:bg-dark-primary hover:text-dark-text-primary ${currentPage === 'members' ? 'bg-gray-100 dark:bg-gray-700' : ''}`}
+        >
           <FaPeopleGroup className="w-6 h-6 mr-2" />
           {isExpanded && <span className="font-f2">{dict[selectedLanguage].members}</span>}
         </li>
-        <li onClick={() => handleLinkClick("dashboard")} 
-            className={`flex items-center space-x-2 p-2 cursor-pointer hover:bg-light-primary dark:hover:bg-dark-primary hover:text-dark-text-primary ${currentPage === "dashboard" ? 'bg-gray-100 dark:bg-gray-700' : ''}`}>
+        <li
+          onClick={() => handleLinkClick('dashboard')}
+          className={`flex items-center space-x-2 p-2 cursor-pointer hover:bg-light-primary dark:hover:bg-dark-primary hover:text-dark-text-primary ${currentPage === 'dashboard' ? 'bg-gray-100 dark:bg-gray-700' : ''}`}
+        >
           <FaTachometerAlt className="w-6 h-6 mr-2" />
           {isExpanded && <span className="font-f2">{dict[selectedLanguage].dashboard}</span>}
         </li>

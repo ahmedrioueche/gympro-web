@@ -18,7 +18,7 @@ import {
 } from 'recharts';
 import { Card, CardHeader, CardTitle, CardContent } from '../../ui/Cards';
 import { Users, TrendingUp, DollarSign, Activity } from 'lucide-react';
-import { dict } from '../../../lib/dict';
+import { dict } from '../../../utils/dict';
 import { useLanguage } from '../../../context/LanguageContext';
 
 const GymDashboard = () => {
@@ -59,24 +59,28 @@ const GymDashboard = () => {
 
   const statsCards = [
     {
+      id: 1,
       title: dict[selectedLanguage].totalMembers,
       value: '584',
       icon: Users,
       trend: dict[selectedLanguage].trendPositive + '12%',
     },
     {
+      id: 2,
       title: dict[selectedLanguage].monthlyRevenue,
       value: '$18,420',
       icon: DollarSign,
       trend: dict[selectedLanguage].trendPositive + '8%',
     },
     {
+      id: 3,
       title: dict[selectedLanguage].activePlans,
       value: '432',
       icon: Activity,
       trend: dict[selectedLanguage].trendPositive + '5%',
     },
     {
+      id: 4,
       title: dict[selectedLanguage].growthRate,
       value: '12%',
       icon: TrendingUp,
@@ -85,11 +89,11 @@ const GymDashboard = () => {
   ];
 
   return (
-    <div className="flex flex-col h-screen p-4 md:p-6 bg-light-background dark:bg-dark-background scrollbar-hide overflow-y-auto">
+    <div className="flex h-screen flex-col overflow-y-auto bg-light-background p-4 scrollbar-hide dark:bg-dark-background md:p-6">
       {/* Stats Cards */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-        {statsCards.map((stat, index) => (
-          <Card key={index} className="bg-light-surface dark:bg-dark-surface">
+      <div className="mb-6 grid grid-cols-2 gap-4 md:grid-cols-4">
+        {statsCards.map(stat => (
+          <Card key={stat.id} className="bg-light-surface dark:bg-dark-surface">
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
@@ -97,9 +101,9 @@ const GymDashboard = () => {
                   <h3 className="text-2xl font-bold text-light-text-primary dark:text-dark-text-primary">
                     {stat.value}
                   </h3>
-                  <span className="text-green-500 text-sm">{stat.trend}</span>
+                  <span className="text-sm text-green-500">{stat.trend}</span>
                 </div>
-                <stat.icon className="w-8 h-8 text-light-primary dark:text-dark-primary" />
+                <stat.icon className="h-8 w-8 text-light-primary dark:text-dark-primary" />
               </div>
             </CardContent>
           </Card>
@@ -107,7 +111,7 @@ const GymDashboard = () => {
       </div>
 
       {/* Charts Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
         {/* Membership Trends */}
         <Card className="bg-light-surface dark:bg-dark-surface">
           <CardHeader>

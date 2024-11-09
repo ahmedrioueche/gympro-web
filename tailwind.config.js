@@ -1,9 +1,9 @@
-import { themes } from './src/lib/themeConfig';
-import scrollbarPlugin from 'tailwind-scrollbar'
-import scrollbarHide from 'tailwind-scrollbar-hide'
+import { themes } from './src/utils/themeConfig';
+import scrollbarPlugin from 'tailwind-scrollbar';
+import scrollbarHide from 'tailwind-scrollbar-hide';
 
 // Helper function to flatten theme colors
-const flattenThemeColors = (themes) => {
+const flattenThemeColors = themes => {
   const flattened = {};
   Object.entries(themes).forEach(([key, value]) => {
     flattened[key] = value; // Add each theme directly to colors
@@ -13,9 +13,9 @@ const flattenThemeColors = (themes) => {
 
 const config = {
   content: [
-    "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
-    "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
-    "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
+    './src/pages/**/*.{js,ts,jsx,tsx,mdx}',
+    './src/components/**/*.{js,ts,jsx,tsx,mdx}',
+    './src/app/**/*.{js,ts,jsx,tsx,mdx}',
   ],
   theme: {
     extend: {
@@ -29,11 +29,11 @@ const config = {
         width: '12px', // Adjust scrollbar width
         track: {
           light: '#E0E0E0', // Light mode track color
-          dark: '#333333',  // Dark mode track color
+          dark: '#333333', // Dark mode track color
         },
         thumb: {
           light: '#a0a0a0', // Light mode thumb color
-          dark: '#555555',  // Dark mode thumb color
+          dark: '#555555', // Dark mode thumb color
           hover: '#808080', // Hover color for thumb
         },
       },
@@ -41,12 +41,12 @@ const config = {
   },
   plugins: [
     scrollbarHide,
-    scrollbarPlugin({ 
+    scrollbarPlugin({
       nocompatible: true,
-      preferredStrategy: 'pseudoelements' 
+      preferredStrategy: 'pseudoelements',
     }),
   ],
-  darkMode: 'class',  
+  darkMode: 'class',
 };
 
 export default config;

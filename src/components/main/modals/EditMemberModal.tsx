@@ -1,10 +1,10 @@
 import CustomDropdown from '../../ui/SelectDropDown';
 import CustomInput from '../../ui/CustomInput';
 import CustomButton from '../../ui/CustomButton';
-import { Member } from '../../../lib/types';
+import { Member } from '../../../utils/types';
 import React, { useState } from 'react';
 import { FaTimes, FaEdit } from 'react-icons/fa';
-import { dict } from '../../../lib/dict';
+import { dict } from '../../../utils/dict';
 import { useLanguage } from '../../../context/LanguageContext';
 
 interface EditMemberModalProps {

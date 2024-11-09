@@ -13,7 +13,7 @@ import {
 } from 'react-icons/fa';
 import { useTheme } from '../../context/ThemeContext';
 import logo from '../../assets/icons/logo.png';
-import { dict } from '../../lib/dict';
+import { dict } from '../../utils/dict';
 import { useNavigate } from 'react-router-dom';
 import { useLanguage } from '../../context/LanguageContext';
 

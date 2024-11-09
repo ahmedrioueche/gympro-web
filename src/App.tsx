@@ -23,7 +23,7 @@ import MemberProfile from './components/main/members/MemberProfile';
 const Landing = () => {
   return (
     <div>
-      <div className='common-bg'>
+      <div className="common-bg">
         <Navbar />
         <Banner />
       </div>
@@ -34,34 +34,41 @@ const Landing = () => {
       <Footer />
     </div>
   );
-}
+};
 
 function App() {
   return (
-    <div className="App scrollbar-hide font-f1 overflow-x-hidden">
+    <div className="App overflow-x-hidden font-f1 scrollbar-hide">
       <Routes>
         <Route path="/" element={<Landing />} />
-        <Route path='/auth/signup' element={<Signup/>}/>
-        <Route path='/auth/login' element={<Login/>}/>
-        <Route path='/auth/verify' element={
-          <ProtectedRoute>
-            <Verify/>
-          </ProtectedRoute>
-        }/>
-        <Route path='/main/*' element={
-            <Main/>
-        }/>
-          <Route path='/members' element={
-          <ProtectedRoute>
-            <Members/>
-          </ProtectedRoute>
-        }/>
-          <Route path='/auth/details' element={
-          <ProtectedRoute>
-            <Details/>
-          </ProtectedRoute>
-        }/>
-        <Route path='/auth/loading' element={<Loading/>}/>
+        <Route path="/auth/signup" element={<Signup />} />
+        <Route path="/auth/login" element={<Login />} />
+        <Route
+          path="/auth/verify"
+          element={
+            <ProtectedRoute>
+              <Verify />
+            </ProtectedRoute>
+          }
+        />
+        <Route path="/main/*" element={<Main />} />
+        <Route
+          path="/members"
+          element={
+            <ProtectedRoute>
+              <Members />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/auth/details"
+          element={
+            <ProtectedRoute>
+              <Details />
+            </ProtectedRoute>
+          }
+        />
+        <Route path="/auth/loading" element={<Loading />} />
       </Routes>
     </div>
   );

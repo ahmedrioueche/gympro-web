@@ -1,14 +1,12 @@
 import { useLanguage } from '../../../context/LanguageContext';
-import { dict } from '../../../lib/dict';
-import { Member } from '../../../lib/types';
+import { dict } from '../../../utils/dict';
+import { Member } from '../../../utils/types';
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
 interface MemberCardHoriProps {
   member: Member;
 }
-
-
 
 const MemberCardHori: React.FC<MemberCardHoriProps> = ({ member }) => {
   const navigate = useNavigate();
@@ -19,9 +17,11 @@ const MemberCardHori: React.FC<MemberCardHoriProps> = ({ member }) => {
   };
 
   const getMembershipStyle = (type: string) => {
-    return type === dict[selectedLanguage].premiumMembership ? 'bg-green-200 text-green-800' : 'bg-gray-200 text-gray-800';
+    return type === dict[selectedLanguage].premiumMembership
+      ? 'bg-green-200 text-green-800'
+      : 'bg-gray-200 text-gray-800';
   };
-  
+
   const getStatusStyle = (isActive: boolean) => {
     return isActive ? 'bg-green-200 text-green-800' : 'bg-red-200 text-red-800';
   };
@@ -59,10 +59,14 @@ const MemberCardHori: React.FC<MemberCardHoriProps> = ({ member }) => {
 
         {/* Subscription Status Section */}
         <div className="w-3/6 flex flex-row justify-center items-start space-x-2">
-          <span className={`inline-block rounded-full px-2 py-1 text-xs font-medium ${getMembershipStyle(member.subscriptionType)}`}>
+          <span
+            className={`inline-block rounded-full px-2 py-1 text-xs font-medium ${getMembershipStyle(member.subscriptionType)}`}
+          >
             {member.subscriptionType.toUpperCase()}
           </span>
-          <span className={`inline-block rounded-full px-2 py-1 text-xs font-medium ${getStatusStyle(member.isSubscriptionActive)}`}>
+          <span
+            className={`inline-block rounded-full px-2 py-1 text-xs font-medium ${getStatusStyle(member.isSubscriptionActive)}`}
+          >
             {member.isSubscriptionActive ? dict[selectedLanguage].activeStatus : dict[selectedLanguage].inactiveStatus}
           </span>
         </div>

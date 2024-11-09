@@ -1,19 +1,19 @@
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/Cards';
 import { Users, Clock, DollarSign, UserPlus, Activity } from 'lucide-react';
-import { Member } from '../../lib/types';
+import { Member } from '../../utils/types';
 import MemberCardHori from './members/MemberCardHori';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
-import { dict } from '../../lib/dict';
+import { dict } from '../../utils/dict';
 import { useLanguage } from '../../context/LanguageContext';
 
 const Home = () => {
   const selectedLanguage = useLanguage();
   const quickStats = [
-    { title: dict[selectedLanguage].activeMembers, value: '432', icon: Users },
-    { title: dict[selectedLanguage].newMembersToday, value: '12', icon: UserPlus },
-    { title: dict[selectedLanguage].revenueToday, value: '$2,320', icon: DollarSign },
-    { title: dict[selectedLanguage].checkIns, value: '145', icon: Clock },
+    { id: 1, title: dict[selectedLanguage].activeMembers, value: '432', icon: Users },
+    { id: 2, title: dict[selectedLanguage].newMembersToday, value: '12', icon: UserPlus },
+    { id: 3, title: dict[selectedLanguage].revenueToday, value: '$2,320', icon: DollarSign },
+    { id: 4, title: dict[selectedLanguage].checkIns, value: '145', icon: Clock },
   ];
 
   const newMembers: Member[] = [
@@ -48,7 +48,7 @@ const Home = () => {
       lastPaymentValue: 120,
     },
     {
-      id: '1',
+      id: '3',
       name: 'Alex Johnson',
       age: '29',
       gender: 'Male',
@@ -63,7 +63,7 @@ const Home = () => {
       lastPaymentValue: 30,
     },
     {
-      id: '2',
+      id: '4',
       name: 'Maria Lopez',
       age: '34',
       gender: 'Female',
@@ -78,7 +78,7 @@ const Home = () => {
       lastPaymentValue: 120,
     },
     {
-      id: '1',
+      id: '5',
       name: 'Alex Johnson',
       age: '29',
       gender: 'Male',
@@ -93,7 +93,7 @@ const Home = () => {
       lastPaymentValue: 30,
     },
     {
-      id: '2',
+      id: '6',
       name: 'Maria Lopez',
       age: '34',
       gender: 'Female',
@@ -121,30 +121,31 @@ const Home = () => {
   ];
 
   return (
-    <div className="flex flex-col h-screen p-4  md:p-6 overflow-y-auto scrollbar-hide bg-light-background dark:bg-dark-background text-light-text-primary dark:text-dark-text-primary space-y-6">
+    <div className="flex h-screen flex-col space-y-6 overflow-y-auto bg-light-background p-4 text-light-text-primary scrollbar-hide dark:bg-dark-background dark:text-dark-text-primary md:p-6">
       {/* Quick Stats Section */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        {quickStats.map((stat, index) => (
-          <Card key={index} className="bg-light-surface dark:bg-dark-surface">
-            <CardContent className="p-6 flex items-center justify-between">
+      <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
+        {quickStats.map(stat => (
+          <Card key={stat.id} className="bg-light-surface dark:bg-dark-surface">
+            <CardContent className="flex items-center justify-between p-6">
               <div>
                 <p className="text-sm text-light-text-secondary dark:text-dark-text-secondary">{stat.title}</p>
                 <h3 className="text-2xl font-bold text-light-text-primary dark:text-dark-text-primary">{stat.value}</h3>
               </div>
-              <stat.icon className="w-8 h-8 text-light-primary dark:text-dark-primary" />
+              <stat.icon className="h-8 w-8 text-light-primary dark:text-dark-primary" />
             </CardContent>
           </Card>
         ))}
       </div>
 
       {/* Live Data Section */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
         {/* Live Chart */}
-        <Card>
+        <Card className="bg-light-surface dark:bg-dark-surface">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
-              <Activity className="w-5 h-5" />
-              Live Activity
+              <Activity className="h-5 w-5" />
+
+              {dict[selectedLanguage].liveActivity}
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -177,12 +178,11 @@ const Home = () => {
             </div>
           </CardContent>
         </Card>
-
         {/* New Members Section */}
-        <Card>
+        <Card className="bg-light-surface dark:bg-dark-surface">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
-              <UserPlus className="w-5 h-5" />
+              <UserPlus className="h-5 w-5" />
               {dict[selectedLanguage].newMembers}
             </CardTitle>
           </CardHeader>

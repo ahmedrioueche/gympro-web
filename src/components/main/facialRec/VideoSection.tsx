@@ -1,5 +1,5 @@
 import React, { useRef, useEffect, useState } from 'react';
-import { dict } from '../../../lib/dict';
+import { dict } from '../../../utils/dict';
 import { useLanguage } from '../../../context/LanguageContext';
 import CustomButton from '../../ui/CustomButton';
 import { Camera, CameraOff } from 'lucide-react';

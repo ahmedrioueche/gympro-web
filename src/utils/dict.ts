@@ -277,7 +277,9 @@ export const dict: any = {
     revenueToday: 'Revenue Today',
     checkIns: 'Check-ins',
     //------------------------------//
+    clearConvo: 'Clear Conversation',
     paymentValue: 'Payment Value',
+    liveActivity: 'Live Activity',
     chatbotReplies: {
       confusedLaugh: "Haha, I have no idea what you're talking about!",
       prankResponse: 'LMAO, get pranked!',

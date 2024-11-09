@@ -1,10 +1,10 @@
 // InputSection.tsx
 import React, { useState } from 'react';
 import logo from '../../../assets/icons/logo.png';
-import { dict } from '../../../lib/dict';
+import { dict } from '../../../utils/dict';
 import { useLanguage } from '../../../context/LanguageContext';
 import CustomDropdown from '../../ui/SelectDropDown';
-import { Member } from '../../../lib/types';
+import { Member } from '../../../utils/types';
 import CustomFileInput from '../../ui/CustomFileInput';
 import CustomInput from '../../ui/CustomInput';
 

@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { FaQuoteLeft, FaQuoteRight } from 'react-icons/fa';
 import clsx from 'clsx';
-import { testimonials } from '../../lib/data';
+import { testimonials } from '../../utils/data';
 
 interface TestimonialProps {
   quote: string;

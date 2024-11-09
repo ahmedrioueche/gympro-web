@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Card, CardContent } from '../ui/Cards';
 import { User, LogOut, Mail, Crown, Save, X } from 'lucide-react';
 import gym_2 from '../../assets/images/gym_2.svg';
-import { dict } from '../../lib/dict';
+import { dict } from '../../utils/dict';
 import { useLanguage } from '../../context/LanguageContext';
 
 const UserProfilePage = () => {
@@ -29,7 +29,7 @@ const UserProfilePage = () => {
   };
 
   return (
-    <div className="relative min-h-screen w-full bg-light-background dark:bg-dark-background flex items-center justify-center p-6">
+    <div className="relative min-h-screen w-full bg-light-background dark:bg-dark-background flex items-center justify-center p-3">
       {/* Background image with smooth opacity */}
       <div className="absolute inset-0 w-full h-full overflow-hidden">
         <img

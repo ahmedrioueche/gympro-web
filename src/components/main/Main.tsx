@@ -7,7 +7,7 @@ import AppFooter from './AppFooter';
 
 // Lazy load components
 const Home = React.lazy(() => import('./Home'));
-const Authentication = React.lazy(() => import('./facialRec/Authentication'));
+const Authentication = React.lazy(() => import('./facialRec/Authentication copy'));
 const AddUser = React.lazy(() => import('./facialRec/AddMember'));
 const Members = React.lazy(() => import('./members/Members'));
 const MemberProfile = React.lazy(() => import('./members/MemberProfile'));
@@ -16,7 +16,7 @@ const Settings = React.lazy(() => import('./settings/Settings'));
 const Feedback = React.lazy(() => import('./Feedback'));
 const UserProfile = React.lazy(() => import('./UserProfile'));
 const Help = React.lazy(() => import('./Help'));
-const Test = React.lazy(() => import('./Test'));
+const Test = React.lazy(() => import('./facialRec/Test'));
 
 const Main = () => {
   return (
