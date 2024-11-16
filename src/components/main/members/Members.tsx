@@ -64,6 +64,7 @@ const Members: React.FC = () => {
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
   const [memberToDeleteId, setMemberToDeleteId] = useState<number | string>();
   const selectedLanguage = useLanguage();
+
   const filteredMembers = useMemo(() => {
     return initialMembers
       .filter(member => {
@@ -96,48 +97,48 @@ const Members: React.FC = () => {
   };
 
   return (
-    <div className="w-full h-full z-0 p-4 px-7 bg-light-background dark:bg-dark-background relative">
+    <div className="relative z-0 h-full w-full bg-light-background p-4 px-7 dark:bg-dark-background">
       {/* Background Image in Top Right Corner */}
-      <div className="absolute md:-top-14 md:-right-20 right-24 -top-48 md:w-2/4 md:h-2/4 w-3/4 h-3/4 opacity-30  pointer-events-none">
-        <img src={gym_2} alt="Gym" className="w-full h-full object-contain" />
+      <div className="pointer-events-none absolute -top-48 right-24 h-3/4 w-3/4 opacity-30 md:-right-20 md:-top-14 md:h-2/4 md:w-2/4">
+        <img src={gym_2} alt="Gym" className="h-full w-full object-contain" />
       </div>
 
-      <div className="relative z-20 flex flex-col lg:flex-row lg:items-center lg:justify-between space-y-4 lg:space-y-0 mt-3 mb-8">
+      <div className="relative z-20 mb-8 mt-3 flex flex-col space-y-4 lg:flex-row lg:items-center lg:justify-between lg:space-y-0">
         <div className="flex flex-col lg:items-center lg:justify-center">
           {/* Search Bar */}
-          <div className="relative w-full mb-4">
+          <div className="relative mb-4 w-full">
             <input
               type="text"
               placeholder={dict[selectedLanguage].searchPlaceholder}
               value={searchQuery}
               onChange={e => setSearchQuery(e.target.value)}
-              className="w-full rounded-lg bg-light-surface dark:bg-dark-surface px-4 py-3 pl-10 text-sm border-none focus:ring-1 focus:ring-dark-primary outline-none dark:text-dark-text-primary"
+              className="w-full rounded-lg border-none bg-light-surface px-4 py-3 pl-10 text-sm outline-none focus:ring-1 focus:ring-dark-primary dark:bg-dark-surface dark:text-dark-text-primary"
             />
-            <Search className="absolute left-3 top-2.5 h-4 w-4 mt-0.5 text-light-text-secondary dark:text-dark-text-secondary" />
+            <Search className="absolute left-3 top-2.5 mt-0.5 h-4 w-4 text-light-text-secondary dark:text-dark-text-secondary" />
           </div>
 
           {/* Filters */}
-          <div className="flex flex-col lg:flex-row space-y-4 lg:space-y-0 lg:space-x-4">
+          <div className="flex flex-col space-y-4 lg:flex-row lg:space-x-4 lg:space-y-0">
             <CustomDropdown
               options={dict[selectedLanguage].statusOptions}
               value={statusFilter}
               onChange={setStatusFilter}
               placeholder={dict[selectedLanguage].selectStatus}
-              className="lg:w-44 bg-light-surface dark:bg-dark-surface"
+              className="bg-light-surface dark:bg-dark-surface lg:w-44"
             />
             <CustomDropdown
               options={dict[selectedLanguage].membershipOptions}
               value={membershipFilter}
               onChange={setMembershipFilter}
               placeholder={dict[selectedLanguage].selectMembership}
-              className="lg:w-44 bg-light-surface dark:bg-dark-surface"
+              className="bg-light-surface dark:bg-dark-surface lg:w-44"
             />
             <CustomDropdown
               options={dict[selectedLanguage].sortOptions}
               value={sortBy}
               onChange={setSortBy}
               placeholder={dict[selectedLanguage].sortBy}
-              className="lg:w-44 bg-light-surface dark:bg-dark-surface"
+              className="bg-light-surface dark:bg-dark-surface lg:w-44"
             />
           </div>
         </div>

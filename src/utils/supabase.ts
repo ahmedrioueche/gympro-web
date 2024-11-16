@@ -3,8 +3,14 @@ import { createClient } from '@supabase/supabase-js';
 // Initialize Supabase with your credentials
 const supabaseUrl = process.env.REACT_APP_SUPABASE_URL;
 const supabaseKey = process.env.REACT_APP_SUPABASE_API_KEY;
-export const supabase = createClient(supabaseUrl!, supabaseKey!);
+let supabase;
+try {
+  supabase = createClient(supabaseUrl!, supabaseKey!);
+} catch (error) {
+  console.log('error: could not create supaase client');
+}
 
+export default supabase;
 // Attach JWT token once the user is authenticated
 export const setupSupabaseClient = (token: string) => {
   return createClient(supabaseUrl!, supabaseKey!, {
