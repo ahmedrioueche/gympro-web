@@ -1,4 +1,3 @@
-// src/App.tsx
 import React from 'react';
 import './App.css';
 import { Route, Routes } from 'react-router-dom';
@@ -19,7 +18,9 @@ import Main from './components/main/Main';
 import Details from './components/auth/Details';
 import Members from './components/main/members/Members';
 import MemberProfile from './components/main/members/MemberProfile';
+import ErrorBoundary from './components/ui/ErrorBoundary';
 
+// Landing Page Component
 const Landing = () => {
   return (
     <div>
@@ -36,39 +37,98 @@ const Landing = () => {
   );
 };
 
+// Main App Component
 function App() {
   return (
     <div className="App overflow-x-hidden font-f1 scrollbar-hide">
       <Routes>
-        <Route path="/" element={<Landing />} />
-        <Route path="/auth/signup" element={<Signup />} />
-        <Route path="/auth/login" element={<Login />} />
+        {/* Landing Page */}
+        <Route
+          path="/"
+          element={
+            <ErrorBoundary>
+              <Landing />
+            </ErrorBoundary>
+          }
+        />
+
+        {/* Authentication Routes */}
+        <Route
+          path="/auth/signup"
+          element={
+            <ErrorBoundary>
+              <Signup />
+            </ErrorBoundary>
+          }
+        />
+        <Route
+          path="/auth/login"
+          element={
+            <ErrorBoundary>
+              <Login />
+            </ErrorBoundary>
+          }
+        />
         <Route
           path="/auth/verify"
           element={
-            <ProtectedRoute>
-              <Verify />
-            </ProtectedRoute>
-          }
-        />
-        <Route path="/main/*" element={<Main />} />
-        <Route
-          path="/members"
-          element={
-            <ProtectedRoute>
-              <Members />
-            </ProtectedRoute>
+            <ErrorBoundary>
+              <ProtectedRoute>
+                <Verify />
+              </ProtectedRoute>
+            </ErrorBoundary>
           }
         />
         <Route
           path="/auth/details"
           element={
-            <ProtectedRoute>
-              <Details />
-            </ProtectedRoute>
+            <ErrorBoundary>
+              <ProtectedRoute>
+                <Details />
+              </ProtectedRoute>
+            </ErrorBoundary>
           }
         />
-        <Route path="/auth/loading" element={<Loading />} />
+        <Route
+          path="/auth/loading"
+          element={
+            <ErrorBoundary>
+              <Loading />
+            </ErrorBoundary>
+          }
+        />
+
+        {/* Main App Routes */}
+        <Route
+          path="/main/*"
+          element={
+            <ErrorBoundary>
+              <ProtectedRoute>
+                <Main />
+              </ProtectedRoute>
+            </ErrorBoundary>
+          }
+        />
+        <Route
+          path="/members"
+          element={
+            <ErrorBoundary>
+              <ProtectedRoute>
+                <Members />
+              </ProtectedRoute>
+            </ErrorBoundary>
+          }
+        />
+        <Route
+          path="/members/:id"
+          element={
+            <ErrorBoundary>
+              <ProtectedRoute>
+                <MemberProfile />
+              </ProtectedRoute>
+            </ErrorBoundary>
+          }
+        />
       </Routes>
     </div>
   );

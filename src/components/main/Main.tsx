@@ -4,6 +4,7 @@ import AppNavbar from './AppNavbar';
 import SideMenu from './SideBar';
 import SkeletonHome from '../ui/SkeletonHome';
 import AppFooter from './AppFooter';
+import ErrorBoundary from '../ui/ErrorBoundary';
 
 // Lazy load components
 const Home = React.lazy(() => import('./Home'));
@@ -20,12 +21,12 @@ const Test = React.lazy(() => import('./facialRec/Test'));
 
 const Main = () => {
   return (
-    <div className="flex flex-col min-h-screen scrollbar-hide">
+    <div className="flex min-h-screen flex-col scrollbar-hide">
       {/* Navbar at the top */}
       <AppNavbar />
 
       {/* Main content container */}
-      <div className="flex flex-1 overflow-hidden h-full">
+      <div className="flex h-full flex-1 overflow-hidden">
         {/* SideMenu with fixed width and full height */}
         <SideMenu />
 
@@ -33,17 +34,94 @@ const Main = () => {
         <main className="flex-1 overflow-y-auto overflow-x-hidden bg-light-background dark:bg-dark-background">
           <Suspense fallback={<SkeletonHome />}>
             <Routes>
-              <Route path="home" element={<Home />} />
-              <Route path="authentication" element={<Authentication />} />
-              <Route path="add-member" element={<AddUser />} />
-              <Route path="members" element={<Members />} />
-              <Route path="profile/:memberId" element={<MemberProfile />} />
-              <Route path="dashboard" element={<GymDashboard />} />
-              <Route path="settings" element={<Settings />} />
-              <Route path="feedback" element={<Feedback />} />
-              <Route path="profile" element={<UserProfile />} />
-              <Route path="help" element={<Help />} />
-              <Route path="test" element={<Test />} />
+              <Route
+                path="home"
+                element={
+                  <ErrorBoundary>
+                    <Home />
+                  </ErrorBoundary>
+                }
+              />
+              <Route
+                path="authentication"
+                element={
+                  <ErrorBoundary>
+                    <Authentication />
+                  </ErrorBoundary>
+                }
+              />
+              <Route
+                path="add-member"
+                element={
+                  <ErrorBoundary>
+                    <AddUser />
+                  </ErrorBoundary>
+                }
+              />
+              <Route
+                path="members"
+                element={
+                  <ErrorBoundary>
+                    <Members />
+                  </ErrorBoundary>
+                }
+              />
+              <Route
+                path="profile/:memberId"
+                element={
+                  <ErrorBoundary>
+                    <MemberProfile />
+                  </ErrorBoundary>
+                }
+              />
+              <Route
+                path="dashboard"
+                element={
+                  <ErrorBoundary>
+                    <GymDashboard />
+                  </ErrorBoundary>
+                }
+              />
+              <Route
+                path="settings"
+                element={
+                  <ErrorBoundary>
+                    <Settings />
+                  </ErrorBoundary>
+                }
+              />
+              <Route
+                path="feedback"
+                element={
+                  <ErrorBoundary>
+                    <Feedback />
+                  </ErrorBoundary>
+                }
+              />
+              <Route
+                path="profile"
+                element={
+                  <ErrorBoundary>
+                    <UserProfile />
+                  </ErrorBoundary>
+                }
+              />
+              <Route
+                path="help"
+                element={
+                  <ErrorBoundary>
+                    <Help />
+                  </ErrorBoundary>
+                }
+              />
+              <Route
+                path="test"
+                element={
+                  <ErrorBoundary>
+                    <Test />
+                  </ErrorBoundary>
+                }
+              />
             </Routes>
           </Suspense>
         </main>

@@ -1,7 +1,8 @@
 import { useState, useEffect, createContext, useContext, ReactNode } from 'react';
-import { createClient, User as SupabaseUser } from '@supabase/supabase-js';
-import { supabase } from '../utils/supabase';
+import { User as SupabaseUser } from '@supabase/supabase-js';
 import { User } from '../utils/types';
+import supabase from '../utils/supabase';
+import bcrypt from 'bcryptjs';
 
 interface AuthState {
   user: User | null;
@@ -52,33 +53,33 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       }
     };
 
-    const subscribeToAuthChanges = () => {
-      const {
-        data: { subscription },
-      } = supabase.auth.onAuthStateChange(async (event, session) => {
-        if (session?.user) {
-          await fetchUserData(session.user);
-        } else {
-          setAuthState({
-            user: null,
-            authUser: null,
-            loading: false,
-            error: null,
-          });
-        }
-      });
-      return () => {
-        subscription.unsubscribe();
-      };
-    };
+    //const subscribeToAuthChanges = () => {
+    //  const {
+    //    data: { subscription },
+    //  } = supabase.auth.onAuthStateChange(async (event, session) => {
+    //    if (session?.user) {
+    //      await fetchUserData(session.user);
+    //    } else {
+    //      setAuthState({
+    //        user: null,
+    //        authUser: null,
+    //        loading: false,
+    //        error: null,
+    //      });
+    //    }
+    //  });
+    //  return () => {
+    //    subscription.unsubscribe();
+    //  };
+    //};
 
     getSession();
-    subscribeToAuthChanges();
+    //subscribeToAuthChanges();
   }, []);
 
   const fetchUserData = async (authUser: SupabaseUser) => {
     try {
-      const { data, error } = await supabase.from('user').select('*').eq('id', authUser.id).single();
+      const { data, error } = await supabase.from('User').select('*').eq('id', authUser.id).single();
       if (error) throw error;
       setAuthState({
         user: data,
@@ -97,56 +98,74 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   const signIn = async (email: string, password: string) => {
+    setAuthState(prev => ({ ...prev, loading: true, error: null })); // Set loading state
     try {
-      const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-      return { data, error };
+      const { data: authData, error } = await supabase.auth.signInWithPassword({ email, password });
+
+      if (error) {
+        console.error('SignIn error:', error);
+        setAuthState(prev => ({ ...prev, loading: false, error }));
+        return { data: null, error };
+      }
+
+      if (authData.user) {
+        console.log('User signed in. Fetching user data...');
+        await fetchUserData(authData.user);
+      }
+
+      return { data: authData, error: null };
     } catch (error) {
-      setAuthState(prev => ({ ...prev, error: error as Error }));
+      console.error('SignIn function encountered an error:', error);
+      setAuthState(prev => ({ ...prev, loading: false, error: error as Error }));
+      return { data: null, error };
     }
   };
 
   const signUp = async (email: string, password: string, userData: Partial<User>) => {
-    console.log('SignUp function called with:', { email, password, userData });
-
+    setAuthState(prev => ({ ...prev, loading: true, error: null })); // Set loading state
     try {
-      console.log('Attempting to sign up the user with Supabase');
       const { data: authData, error: authError } = await supabase.auth.signUp({ email, password });
 
       if (authError) {
         console.error('Supabase auth signUp error:', authError);
-        throw authError;
+        setAuthState(prev => ({ ...prev, loading: false, error: authError }));
+        return { data: null, error: authError };
       }
-
-      console.log('Supabase auth signUp response:', authData);
 
       if (authData.user) {
         console.log('User created in Supabase auth. Inserting user data into the database...');
+        const hashedPassword = await bcrypt.hash(password, 10);
         const { error: dbError } = await supabase.from('User').insert([
           {
             id: authData.user.id,
             email: authData.user.email,
+            password: hashedPassword,
             ...userData,
           },
         ]);
 
         if (dbError) {
           console.error('Database insertion error:', dbError);
-          throw dbError;
+          setAuthState(prev => ({ ...prev, loading: false, error: dbError }));
+          return { data: null, error: dbError };
         }
+
         console.log('User data successfully inserted into database');
+        await fetchUserData(authData.user);
       }
 
-      console.log('SignUp successful. Returning auth data.');
       return { data: authData, error: null };
     } catch (error) {
       console.error('SignUp function encountered an error:', error);
-      setAuthState(prev => ({ ...prev, error: error as Error }));
+      setAuthState(prev => ({ ...prev, loading: false, error: error as Error }));
       return { data: null, error };
     }
   };
 
   const signOut = async () => {
     const { error } = await supabase.auth.signOut();
+    console.log(error);
+
     if (error) {
       setAuthState(prev => ({ ...prev, error: error as Error }));
     }

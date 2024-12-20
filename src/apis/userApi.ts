@@ -1,5 +1,5 @@
 import { url } from '../config/config';
-import { Member, User } from './types';
+import { Member, User } from '../utils/types';
 
 interface ContactFormData {
   firstName: string;
@@ -79,28 +79,6 @@ export const apiUpdateUser = async (id: number | null, email: string | null | un
   } catch (error) {
     console.log('Failed to update user', error);
     return { status: 'error', message: 'An error occured' };
-  }
-};
-
-export const apiSendVerificationCode = async (email: string, subject: string, content: string): Promise<any> => {
-  try {
-    const response = await fetch('/api/main/email/send-email', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, subject, content }),
-    });
-
-    if (!response.ok) { 
-      throw new Error('Failed to send email');
-    }
-
-    const responseData = await response.json();
-
-    return responseData;
-  } catch (error) {
-    console.error('Failed to send email:', error);
-
-    return { status: 'error', message: 'An error occurred' };
   }
 };
 

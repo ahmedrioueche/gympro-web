@@ -14,8 +14,7 @@ const Loading: React.FC = () => {
   const { currentTheme } = useTheme();
   const navigate = useNavigate();
 
-  const { user } = useAuth();
-  console.log('user in loading', user);
+  const { isAuthenticated } = useAuth();
 
   useEffect(() => {
     handleUserRouting();
@@ -36,31 +35,31 @@ const Loading: React.FC = () => {
 
   return (
     <section
-      className={`py-20 flex items-center justify-center min-h-screen ${
+      className={`flex min-h-screen items-center justify-center py-20 ${
         isDarkMode ? 'bg-gray-900' : 'bg-gray-100'
       } transition-colors duration-300`}
     >
       <div className="container mx-auto flex flex-col items-center">
         <div
-          className={`relative w-full max-w-lg flex flex-col items-center rounded-xl shadow-2xl p-10 ${
+          className={`relative flex w-full max-w-lg flex-col items-center rounded-xl p-10 shadow-2xl ${
             isDarkMode ? 'bg-gray-800 text-gray-200' : 'bg-white text-gray-800'
           } transition-all duration-500`}
         >
-          <div className="flex items-center justify-center mb-8">
+          <div className="mb-8 flex items-center justify-center">
             <AiOutlineLoading3Quarters
-              className={`text-7xl animate-spin ${isDarkMode ? 'text-dark-primary' : 'text-light-primary'}`}
+              className={`animate-spin text-7xl ${isDarkMode ? 'text-dark-primary' : 'text-light-primary'}`}
             />
           </div>
           <h2
-            className={`text-3xl font-extrabold mb-6 ${
+            className={`mb-6 text-3xl font-extrabold ${
               isDarkMode
                 ? 'bg-gradient-to-r from-dark-primary to-dark-secondary'
                 : 'bg-gradient-to-r from-light-primary to-light-secondary'
-            } text-transparent bg-clip-text`}
+            } bg-clip-text text-transparent`}
           >
             {dict[selectedLanguage].loading}
           </h2>
-          <p className="text-lg text-center">{dict[selectedLanguage].loadingText}</p>
+          <p className="text-center text-lg">{dict[selectedLanguage].loadingText}</p>
         </div>
         <div className="mt-10 flex items-center space-x-2 text-sm text-gray-500">
           <AiOutlineCheckCircle

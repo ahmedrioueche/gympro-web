@@ -10,7 +10,6 @@ interface LanguageProviderProps {
 
 export const LanguageProvider: React.FC<LanguageProviderProps> = ({ children }) => {
   const { user } = useAuth(); // Get user from useAuth hook
-  console.log('user in LanguageProvider', user);
   const [language, setLanguage] = useState<string>('en'); // Default to 'en'
 
   useEffect(() => {

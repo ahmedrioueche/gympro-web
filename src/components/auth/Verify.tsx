@@ -4,7 +4,7 @@ import { dict } from '../../utils/dict';
 import logo from '../../assets/icons/logo.png';
 import { useTheme } from '../../context/ThemeContext';
 import verify from '../../assets/images/verify.svg';
-import { apiSendVerificationEmail as apiSendVerificationCode, apiUpdateUser } from '../../utils/apiHelper';
+import { apiSendVerificationCode, apiUpdateUser } from '../../utils/apiHelper';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../utils/store';
 import { capitalizeFirstLetter } from '../../utils/formater';
@@ -50,7 +50,7 @@ function Verify() {
   }, [user.email, user.isEmailValidated, navigate]);
 
   const handleSendVerificationCode = async (email: string | null) => {
-    const response = email ? await apiSendVerificationCode(email) : null;
+    const response = email ? await apiSendVerificationCode(email, '', '') : null;
     console.log('response', response);
     if (response.success) {
       setSentVerificationCode(response.verificationCode);
@@ -94,19 +94,19 @@ function Verify() {
   }
 
   return (
-    <div className="flex flex-col md:flex-row min-h-screen">
+    <div className="flex min-h-screen flex-col md:flex-row">
       {/* Left Section: Form */}
-      <div className="flex-1 flex items-center justify-center bg-white dark:bg-gray-800 p-8">
+      <div className="flex flex-1 items-center justify-center bg-white p-8 dark:bg-gray-800">
         <div className="w-full max-w-md">
           {/* Logo and Image at the Top */}
-          <a href="/" className="flex flex-row justify-center items-center mb-8 md:mb-4">
+          <a href="/" className="mb-8 flex flex-row items-center justify-center md:mb-4">
             <img src={logo} alt="Logo" className="mb-2" width={50} height={50} />
-            <span className="text-4xl ml-2 font-f2 text-light-text-primary dark:text-dark-text-primary">
+            <span className="ml-2 font-f2 text-4xl text-light-text-primary dark:text-dark-text-primary">
               {dict[selectedLanguage].logo}
             </span>
           </a>
 
-          <div className="flex justify-between items-center mb-6">
+          <div className="mb-6 flex items-center justify-between">
             <h2 className="text-xl font-bold text-gray-900 dark:text-white">{dict[selectedLanguage].verifyEmail}</h2>
             <button
               className="text-light-text-primary dark:text-dark-text-primary"
@@ -132,19 +132,19 @@ function Verify() {
                   }
                 }}
                 required
-                className="block w-full p-4 text-sm text-gray-900 dark:text-white bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-light-primary dark:focus:ring-dark-primary"
+                className="block w-full rounded-md border border-gray-300 bg-gray-50 p-4 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-light-primary dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:focus:ring-dark-primary"
                 placeholder={dict[selectedLanguage].verificationCodePlaceHolder}
               />
               <label
                 htmlFor="code"
-                className="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-4 scale-75 top-2 left-3 z-10 origin-[0] bg-white dark:bg-gray-800 px-1"
+                className="absolute left-3 top-2 z-10 origin-[0] -translate-y-4 scale-75 transform bg-white px-1 text-sm text-gray-500 duration-300 dark:bg-gray-800 dark:text-gray-400"
               >
                 {dict[selectedLanguage].verificationCode}
               </label>
             </div>
             <button
               type="submit"
-              className="w-full p-3 flex justify-center items-center bg-light-primary dark:bg-dark-primary text-white rounded-md hover:bg-light-secondary dark:hover:bg-dark-secondary transition-colors duration-300"
+              className="flex w-full items-center justify-center rounded-md bg-light-primary p-3 text-white transition-colors duration-300 hover:bg-light-secondary dark:bg-dark-primary dark:hover:bg-dark-secondary"
               disabled={isLoading}
             >
               {isLoading ? <FaSpinner className="animate-spin" /> : dict[selectedLanguage].verifyEmail}
@@ -154,16 +154,16 @@ function Verify() {
             <div className="mt-4 text-center text-sm text-light-primary dark:text-dark-primary">{result.message}</div>
           )}
           {!verificationCode ? (
-            <div className="flex flex-col space-y-2 mt-6 text-center text-sm ext-gray-500 dark:text-gray-400">
+            <div className="ext-gray-500 mt-6 flex flex-col space-y-2 text-center text-sm dark:text-gray-400">
               <p className="">{dict[selectedLanguage].verificationCodeNoReceive}</p>
-              <p onClick={() => handleCodeResend()} className="hover:underline hover:cursor-pointer">
+              <p onClick={() => handleCodeResend()} className="hover:cursor-pointer hover:underline">
                 {dict[selectedLanguage].checkSpam}
                 {dict[selectedLanguage].clickHereToResend}.
               </p>
             </div>
           ) : (
-            <div className="flex flex-col space-y-2 mt-6 text-center text-sm ext-gray-500 dark:text-gray-400">
-              <p onClick={() => handleCodeResend()} className="hover:underline hover:cursor-pointer">
+            <div className="ext-gray-500 mt-6 flex flex-col space-y-2 text-center text-sm dark:text-gray-400">
+              <p onClick={() => handleCodeResend()} className="hover:cursor-pointer hover:underline">
                 {capitalizeFirstLetter(dict[selectedLanguage].clickHereToResend)}.
               </p>
             </div>
@@ -171,11 +171,11 @@ function Verify() {
         </div>
       </div>
       {/* Right Section: Image */}
-      <div className="flex-1 hidden md:flex items-center justify-center bg-light-background dark:bg-dark-background">
+      <div className="hidden flex-1 items-center justify-center bg-light-background dark:bg-dark-background md:flex">
         <img
           src={verify}
           alt={dict[selectedLanguage].loginImageAlt}
-          className="w-full h-auto"
+          className="h-auto w-full"
           width={500}
           height={500}
         />

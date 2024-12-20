@@ -3,7 +3,7 @@ import Loading from './auth/Loading';
 import { useAuth } from '../context/AuthContext';
 
 export const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const { isAuthenticated, loading } = useAuth();
+  const { isAuthenticated, loading, user } = useAuth();
   const location = useLocation();
   const token = localStorage.getItem('token');
 
@@ -12,7 +12,7 @@ export const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ childr
     return <>{children}</>;
   }
 
-  if(loading){
+  if (loading) {
     return null;
   }
 
