@@ -34,56 +34,6 @@ const LoginForm: React.FC = ({}) => {
       setIsLoading('');
       return;
     }
-    //try {
-    //  // Step 1: Sign in with Supabase
-    //  const { data: supabaseData, error: supabaseError } = await supabase.auth.signInWithPassword({
-    //    email,
-    //    password,
-    //  });
-    //
-    //  console.log('supabaseData', supabaseData);
-    //  // Check for Supabase sign-in errors
-    //  if (supabaseError) {
-    //    //  throw new Error(supabaseError.message); // Throw if Supabase returns an error
-    //  }
-    //
-    //  const token = supabaseData?.session?.access_token!;
-    //
-    //  // Step 2: Authenticate user with your backend
-    //  const response = await apiAuthenticateUser(email, password);
-    //  console.log('response', response);
-    //
-    //  if (response.status === 'success') {
-    //    // Step 3: Update application state and store token
-    //    dispatch(
-    //      setUser({
-    //        name: response.name || null,
-    //        email: response.email, // Ensure email is pulled from response
-    //        isLoggedIn: true,
-    //      })
-    //    );
-    //    setResult(response);
-    //    sessionStorage.setItem('token', token);
-    //
-    //    // Navigate to loading screen
-    //    navigate('/auth/loading');
-    //  } else {
-    //    // Handle failure case if the response is not successful
-    //    setResult({
-    //      status: 'fail',
-    //      message: dict[selectedLanguage].loginFailed,
-    //    });
-    //  }
-    //} catch (err) {
-    //  console.error('Login error:', err);
-    //  // Handle errors and update the result
-    //  setResult({
-    //    status: 'fail',
-    //    message: dict[selectedLanguage].loginFailed,
-    //  });
-    //} finally {
-    //  setIsLoading(''); // Reset loading state
-    //}
 
     const { data, error } = await signIn(email, password);
 
@@ -98,8 +48,6 @@ const LoginForm: React.FC = ({}) => {
     }
     setIsLoading('');
   };
-
-  const handleGoogleLogin = () => {};
 
   return (
     <div className="flex min-h-screen flex-col md:flex-row">
@@ -177,22 +125,6 @@ const LoginForm: React.FC = ({}) => {
                 {result.message}
               </div>
             )}
-
-            {/* Continue with Google */}
-            <button
-              type="button"
-              onClick={handleGoogleLogin}
-              className="flex w-full items-center justify-center rounded-md border border-gray-300 bg-white p-3 text-gray-900 transition-colors duration-300 hover:bg-gray-50 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:hover:bg-gray-600"
-            >
-              {isLoading === 'google' ? (
-                <FaSpinner className="animate-spin" />
-              ) : (
-                <div className="flex flex-row">
-                  <FaGoogle className="mr-2 mt-1" />
-                  {dict[selectedLanguage].continueWithGoogle}
-                </div>
-              )}
-            </button>
           </form>
 
           {/* Signup Link */}

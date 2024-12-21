@@ -54,59 +54,8 @@ const SignupForm: React.FC = () => {
       return;
     }
 
-    //try {
-    //  // Step 1: Sign up with Supabase
-    //  const { data: supabaseData, error: supabaseError } = await supabase.auth.signUp({
-    //    email,
-    //    password,
-    //  });
-    //
-    //  if (supabaseError) {
-    //    throw new Error(supabaseError.message); // Throw if Supabase returns an error
-    //  }
-    //
-    //  // Step 2: Send user data to backend
-    //  const response = await apiSignupUser(email, password, '');
-    //
-    //  if (supabaseData.user) {
-    //    // Step 3: Store token and update application state
-    //    sessionStorage.setItem('token', supabaseData?.session?.access_token!);
-    //    dispatch(
-    //      setUser({
-    //        name: response.name || null,
-    //        email,
-    //        isLoggedIn: true,
-    //      })
-    //    );
-    //
-    //    setResult(response);
-    //    navigate('/auth/verify'); // Navigate to the verification page
-    //  } else {
-    //    // Handle case where user does not exist
-    //    const userMessage =
-    //      response.message === 'User already exists'
-    //        ? dict[selectedLanguage].userAlreadyExists
-    //        : dict[selectedLanguage].signupFailed;
-    //
-    //    setResult({
-    //      status: 'fail',
-    //      message: userMessage,
-    //    });
-    //  }
-    //} catch (err) {
-    //  // Catch errors from both signup and API call
-    //  console.error('Signup error:', err);
-    //  setResult({
-    //    status: 'fail',
-    //    message: err instanceof Error ? err.message : 'Signup failed',
-    //  });
-    //} finally {
-    //  setIsLoading(''); // Reset loading state
-    //}
-
     const { data, error } = await signUp(email, password, {});
-    console.log('data', data);
-    console.log('error', error);
+
     if (error) {
       setResult({
         status: 'fail',
@@ -220,21 +169,6 @@ const SignupForm: React.FC = () => {
                 {result.message}
               </div>
             )}
-            {/* Continue with Google */}
-            <button
-              type="button"
-              onClick={handleGoogleSignup}
-              className="flex w-full items-center justify-center rounded-md border border-gray-300 bg-white p-3 text-gray-900 transition-colors duration-300 hover:bg-gray-50 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:hover:bg-gray-600"
-            >
-              {isLoading === 'google' ? (
-                <FaSpinner className="animate-spin" />
-              ) : (
-                <div className="flex flex-row">
-                  <FaGoogle className="mr-2 mt-1" />
-                  {dict[selectedLanguage].continueWithGoogle}
-                </div>
-              )}
-            </button>
           </form>
           {/* Login Link */}
           <p className="mt-6 text-center text-sm text-gray-500 dark:text-gray-400">
